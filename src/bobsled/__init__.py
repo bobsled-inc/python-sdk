@@ -1,1 +1,6 @@
+"""
+The primary class you will instantiate is :class:`bobsled.MainClass.BobsledClient`.
+From its methods, you will obtain instances of all Bobsled objects.
+"""
+
 from bobsled.MainClass import BobsledClient

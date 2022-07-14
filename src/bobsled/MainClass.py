@@ -22,18 +22,24 @@ class BobsledClient:
         }
         
         response = self.s.post(
-            "http://127.0.0.1:3000" + "/testing/signinwithemailandpassword?_data=routes%2Ftesting%2FsignInWIthEmailAndPassword",
-            data=self.credentials)
+            "http://127.0.0.1:3000" + "/testing/signinwithemailandpassword",
+            data=self.credentials,
+            params=params)
         if response.status_code != 204:
             raise BobsledException.BadCredentialsException(status = response.status_code, data = response.text)
 
     def list_shares(self):
+        """Returns a list of share_ids that can be used with get_share
+
+        :calls: `GET /shares`
+        :return: a list of share_ids
+        """        
         params = {
             "_data": "routes/__auth/shares/index"
         }
         
         r = self.s.get(
-            self.base_url,
+            self.base_url +"/shares",
             params=params
         )
         if r.status_code != 200:
@@ -50,6 +56,11 @@ class BobsledClient:
         return self.Share(share_id, self.s, self.base_url)
 
     def create_share(self):
+        """Creates a new share. This only works if authenticated as a provider
+
+        :calls: `POST /shares`
+        :return: the Share object representing the share that was just created
+        """        
         params = {
             "index" : "",  # We need this for some reason
             "_data": "routes/__auth/shares/index"
@@ -67,6 +78,9 @@ class BobsledClient:
 
 
     class Share:
+        """
+        This class represents a share, and should only be acquired by the user through calling get_share or create_share on a BobsledClient
+        """
         def __init__(self, share_id, session, base_url):
             self.share_id = share_id
             self.s = session
@@ -124,6 +138,7 @@ class BobsledClient:
         def set_source_location(self, location_id):
             """Set the source of the share to location_id
 
+            :calls: `POST /shares/{share_id}/source`
             :param location_id: unique identifier of a source container
             """            
             data = {"locationId": location_id}
@@ -139,8 +154,12 @@ class BobsledClient:
                 print("error")
                 return
 
-        # Gets list of destination location ids
         def get_destination_locations(self):
+            """Get destination locations that can be used in set_destination_location
+
+            :calls: `GET /shares/{share_id}/destination/new`
+            :return: something, a list or dictionary of locations, undecided
+            """            
             
             params = {
                 "_data": "routes/__auth/shares/shareId/destination/new"
@@ -157,8 +176,12 @@ class BobsledClient:
             locations = r.json()['availableAwsRegions']
             return locations
 
-        # Change destination bucket to given location_id
         def set_destination_location(self, location_id):
+            """Sets destination location of this share to given cloud and location_id (region?)
+
+            :calls: `POST /shares/{share_id}/destination/new`
+            :param location_id: something
+            """            
             data = {"cloud": "AWS", "region": location_id}
             params = {
                 "_data": "routes/__auth/shares/shareId/destination/new"
@@ -174,8 +197,12 @@ class BobsledClient:
             print("Destination location changed to:", location_id)
             print()
 
-        # Returns a list of available file paths
         def get_folder_contents(self):
+            """Returns flattened contents of all files in source location
+
+            :calls: `GET /shares/{share_id}/loadCloudData`
+            :return: list of file paths
+            """            
             params = {
                 "_data": "routes/__auth/shares/shareId/loadCloudData"
             }
@@ -191,7 +218,13 @@ class BobsledClient:
             # figure out a better way to flatten maybe?
             return flatten(folderContents)
 
+        # NEED TO CHANGE THIS
         def get_deliveries(self):
+            """Returns the list of deliveries of this share
+
+            :calls: `GET /shares/{share_id}/driver`
+            :return: list of deliveries
+            """            
             r = self.s.get(self.base_url + "/shares/" + self.share_id +
                 "/driver")
             #print(r.text)
@@ -242,6 +275,11 @@ class BobsledClient:
 
         # Gets a dictionary of Providers and Consumers
         def get_team(self):
+            """Returns team members
+
+            :calls: `GET /shares/{share_id}/team`
+            :return: dictionary representing team members
+            """            
             params = {
                 "_data": "routes/__auth/shares/shareId/team"
             }
@@ -257,6 +295,11 @@ class BobsledClient:
 
         # Add a Consumer using email
         def add_consumer(self, consumer_email):
+            """Adds a consumer by given email
+
+            :calls: `POST /shares/{share_id}/team`
+            :param consumer_email: email address of the consumer to be added
+            """            
             data = {
                 "email": consumer_email,
                 "role": "consumer",
@@ -298,6 +341,9 @@ class BobsledClient:
                 return
 
         class Delivery:
+            """
+            This class represents a delivery, and should only be acquired by the user through calling get_delivery or create_delivery on a Share
+            """
             def __init__(self, delivery_id, share_id, session, base_url):
                 # Maybe also store delivery name? 
                 self.delivery_id = delivery_id
