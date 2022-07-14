@@ -215,7 +215,6 @@ class BobsledClient:
                 return []
             print(r.json())
             folderContents = r.json()['folderContents']
-            # figure out a better way to flatten maybe?
             return flatten(folderContents)
 
         # NEED TO CHANGE THIS
@@ -227,7 +226,6 @@ class BobsledClient:
             """            
             r = self.s.get(self.base_url + "/shares/" + self.share_id +
                 "/driver")
-            #print(r.text)
             delivery_list = []
             for obj in r.json():
                 delivery_list.append(self.Delivery(obj["id"], self.share_id, self.s, self.base_url))
@@ -254,11 +252,8 @@ class BobsledClient:
             if r.status_code != 204:
                 print("Failed to create Delivery", r.status_code)
                 return
-            print("Delivery created:", selection)
-            print()
-            # hopefully we can return delivery_id
+            return self.Delivery(r.json()["delivery_id"], self.share_id, self.s, self.base_url)
 
-        # Gets a dictionary of Providers and Consumers
         def get_team(self):
             """Returns team members
 
@@ -278,7 +273,6 @@ class BobsledClient:
                 return
             return r.json()
 
-        # Add a Consumer using email
         def add_consumer(self, consumer_email):
             """Adds a consumer by given email
 
@@ -330,20 +324,19 @@ class BobsledClient:
             This class represents a delivery, and should only be acquired by the user through calling get_delivery or create_delivery on a Share
             """
             def __init__(self, delivery_id, share_id, session, base_url):
-                # Maybe also store delivery name? 
                 self.delivery_id = delivery_id
                 self.share_id = share_id
                 self.s = session
                 self.base_url = base_url
-            
-            def __str__(self):
-                # Use delivery name instead of id
-                return "Delivery(" + self.delivery_id + ")"
 
             def __repr__(self):
                 return "Delivery(" + self.delivery_id + ")"
 
             def deliver_delivery(self):
+                """Delivers this Delivery
+                
+                :calls: `POST /shares/{share_id}`
+                """                
                 data = {
                     "deliverDeliveryId": self.delivery_id
                 }
