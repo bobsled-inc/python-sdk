@@ -53,6 +53,11 @@ class BobsledClient:
         return share_list_ids
 
     def get_share(self, share_id):
+        """Returns the Share with given share_id
+
+        :param share_id: unique id of share
+        :return: Share object
+        """        
         return self.Share(share_id, self.s, self.base_url)
 
     def create_share(self):
@@ -213,7 +218,6 @@ class BobsledClient:
             if r.status_code != 200:
                 print("Cannot get folder contents", r.status_code)
                 return []
-            print(r.json())
             folderContents = r.json()['folderContents']
             return flatten(folderContents)
 
@@ -248,8 +252,9 @@ class BobsledClient:
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
                 "/delivery",
-                data=data)
-            if r.status_code != 204:
+                data=data,
+                params=params)
+            if r.status_code != 200:
                 print("Failed to create Delivery", r.status_code)
                 return
             return self.Delivery(r.json()["delivery_id"], self.share_id, self.s, self.base_url)
@@ -299,9 +304,14 @@ class BobsledClient:
 
         def send_invitation(self, id):
             # Provide email, calls getTeam to get according id, then POSTs to the right id?
-            return "unimplemented"
+            # Unimplemented
+            pass
 
         def edit_access_identifiers(self, ARN_list):
+            """Edit access identifiers of this share
+
+            :param ARN_list: list of access identifiers for this share
+            """            
             data = {
                 "accessIdentifiers": ARN_list.__str__().replace(" ", "").replace(
                     "\'", "\"")
@@ -329,6 +339,9 @@ class BobsledClient:
                 self.s = session
                 self.base_url = base_url
 
+            def __str__(self):
+                return self.__repr__()
+                        
             def __repr__(self):
                 return "Delivery(" + self.delivery_id + ")"
 
