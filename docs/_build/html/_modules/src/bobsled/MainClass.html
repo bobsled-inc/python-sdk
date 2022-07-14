@@ -167,7 +167,7 @@
             <span class="p">}</span>
             
             <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/shares/shareId/overview&quot;</span>
+                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/shares/$shareId/overview&quot;</span>
             <span class="p">}</span>
             <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">+</span>
@@ -186,7 +186,7 @@
 <span class="sd">            &quot;&quot;&quot;</span>
             
             <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares/shareId/source&quot;</span>
+                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares/$shareId/source&quot;</span>
             <span class="p">}</span>
             <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">+</span>
@@ -209,7 +209,7 @@
 <span class="sd">            &quot;&quot;&quot;</span>            
             <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;locationId&quot;</span><span class="p">:</span> <span class="n">location_id</span><span class="p">}</span>
             <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares/shareId/source&quot;</span>
+                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares/$shareId/source&quot;</span>
             <span class="p">}</span>
             <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">+</span>
@@ -228,7 +228,7 @@
 <span class="sd">            &quot;&quot;&quot;</span>            
             
             <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares/shareId/destination/new&quot;</span>
+                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares/$shareId/destination/new&quot;</span>
             <span class="p">}</span>
             
             <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
@@ -250,7 +250,7 @@
 <span class="sd">            &quot;&quot;&quot;</span>            
             <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cloud&quot;</span><span class="p">:</span> <span class="s2">&quot;AWS&quot;</span><span class="p">,</span> <span class="s2">&quot;region&quot;</span><span class="p">:</span> <span class="n">location_id</span><span class="p">}</span>
             <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares/shareId/destination/new&quot;</span>
+                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares/$shareId/destination/new&quot;</span>
             <span class="p">}</span>
             <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">+</span>
@@ -270,7 +270,7 @@
 <span class="sd">            :return: list of file paths</span>
 <span class="sd">            &quot;&quot;&quot;</span>            
             <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares/shareId/loadCloudData&quot;</span>
+                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares/$shareId/loadCloudData&quot;</span>
             <span class="p">}</span>
             <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">+</span>
@@ -299,44 +299,29 @@
                 <span class="n">delivery_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Delivery</span><span class="p">(</span><span class="n">obj</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="p">))</span>
             <span class="k">return</span> <span class="n">delivery_list</span></div>
 
-        <span class="c1"># Creates a delivery given selection of file paths in the source bucket</span>
 <div class="viewcode-block" id="BobsledClient.Share.create_delivery"><a class="viewcode-back" href="../../../bobsled.html#src.bobsled.MainClass.BobsledClient.Share.create_delivery">[docs]</a>        <span class="k">def</span> <span class="nf">create_delivery</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selection</span><span class="p">):</span>
-            <span class="c1"># if selection is a single string, then we have to handle differently</span>
+            <span class="sd">&quot;&quot;&quot;Creates and returns a Delivery object given selection of file paths</span>
+
+<span class="sd">            :calls: `POST /shares/{share_id}/delivery`</span>
+<span class="sd">            :param selection: file paths for files in the source container to be included in this delivery</span>
+<span class="sd">            &quot;&quot;&quot;</span>            
 
             <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="s2">&quot;sharedFiles&quot;</span><span class="p">:</span> <span class="n">selection</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
                     <span class="s2">&quot;</span><span class="se">\&#39;</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># we have to fit specific format</span>
             <span class="p">}</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares/$shareId/delivery&quot;</span>
+            <span class="p">}</span>
             <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">+</span>
-                <span class="s2">&quot;/delivery?_data=routes</span><span class="si">%2F</span><span class="s2">__auth</span><span class="si">%2F</span><span class="s2">shares</span><span class="si">%2F%24s</span><span class="s2">hareId</span><span class="si">%2F</span><span class="s2">delivery&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;/delivery&quot;</span><span class="p">,</span>
                 <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">204</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Failed to create Delivery&quot;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
                 <span class="k">return</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Delivery created:&quot;</span><span class="p">,</span> <span class="n">selection</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">()</span></div>
-            <span class="c1"># hopefully we can return delivery_id</span>
-
-        <span class="c1"># Creates a delivery given selection of file paths in the source bucket</span>
-<div class="viewcode-block" id="BobsledClient.Share.create_delivery_test"><a class="viewcode-back" href="../../../bobsled.html#src.bobsled.MainClass.BobsledClient.Share.create_delivery_test">[docs]</a>        <span class="k">def</span> <span class="nf">create_delivery_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selection</span><span class="p">):</span>
-            <span class="c1"># if selection is a single string, then we have to handle differently</span>
-
-            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;sharedFiles&quot;</span><span class="p">:</span> <span class="n">selection</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
-                    <span class="s2">&quot;</span><span class="se">\&#39;</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># we have to fit specific format</span>
-            <span class="p">}</span>
-            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">+</span>
-                <span class="s2">&quot;/driver&quot;</span><span class="p">,</span>
-                <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Failed to create Delivery&quot;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
-                <span class="k">return</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Delivery id:&quot;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;delivery_id&quot;</span><span class="p">])</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Delivery</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;delivery_id&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="p">)</span></div>
-            <span class="c1"># print(&quot;Delivery id:&quot;, r.json()[&quot;id&quot;])</span>
             <span class="c1"># hopefully we can return delivery_id</span>
 
         <span class="c1"># Gets a dictionary of Providers and Consumers</span>
@@ -347,7 +332,7 @@
 <span class="sd">            :return: dictionary representing team members</span>
 <span class="sd">            &quot;&quot;&quot;</span>            
             <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares/shareId/team&quot;</span>
+                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares/$shareId/team&quot;</span>
             <span class="p">}</span>
             
             <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
@@ -372,7 +357,7 @@
                 <span class="s2">&quot;actionType&quot;</span><span class="p">:</span> <span class="s2">&quot;addUserToShare&quot;</span>
             <span class="p">}</span>
             <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares/shareId/team&quot;</span>
+                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares/$shareId/team&quot;</span>
             <span class="p">}</span>
             <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">+</span>
@@ -394,7 +379,7 @@
                     <span class="s2">&quot;</span><span class="se">\&#39;</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="p">}</span>
             <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares/shareId/destination/edit&quot;</span>
+                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares/$shareId/destination/edit&quot;</span>
             <span class="p">}</span>
             <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">+</span>
@@ -429,7 +414,7 @@
                     <span class="s2">&quot;deliverDeliveryId&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">delivery_id</span>
                 <span class="p">}</span>
                 <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares/shareId&quot;</span>
+                    <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares/$shareId&quot;</span>
                 <span class="p">}</span>
                 <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span><span class="p">,</span>

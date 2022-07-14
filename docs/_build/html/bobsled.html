@@ -139,12 +139,16 @@ From its methods, you will obtain instances of all Bobsled objects.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="src.bobsled.MainClass.BobsledClient.Share.create_delivery">
 <span class="sig-name descname"><span class="pre">create_delivery</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selection</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/bobsled/MainClass.html#BobsledClient.Share.create_delivery"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.bobsled.MainClass.BobsledClient.Share.create_delivery" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="src.bobsled.MainClass.BobsledClient.Share.create_delivery_test">
-<span class="sig-name descname"><span class="pre">create_delivery_test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selection</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/bobsled/MainClass.html#BobsledClient.Share.create_delivery_test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.bobsled.MainClass.BobsledClient.Share.create_delivery_test" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Creates and returns a Delivery object given selection of file paths</p>
+<dl class="field-list simple">
+<dt class="field-odd">Calls</dt>
+<dd class="field-odd"><p><cite>POST /shares/{share_id}/delivery</cite></p>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><p><strong>selection</strong> – file paths for files in the source container to be included in this delivery</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="src.bobsled.MainClass.BobsledClient.Share.edit_access_identifiers">

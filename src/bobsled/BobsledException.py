@@ -7,6 +7,20 @@ class BobsledException(Exception):
         super().__init__()
         self.__status = status
         self.__data = data
+        
+    @property
+    def status(self):
+        """
+        The status returned by the Bobsled API
+        """
+        return self.__status
+
+    @property
+    def data(self):
+        """
+        The data returned by the Bobsled API
+        """
+        return self.__data
 
 class BadCredentialsException(BobsledException):
     """

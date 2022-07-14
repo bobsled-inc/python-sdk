@@ -101,7 +101,7 @@ class BobsledClient:
             }
             
             params = {
-                "_data": "routes/shares/shareId/overview"
+                "_data": "routes/shares/$shareId/overview"
             }
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
@@ -120,7 +120,7 @@ class BobsledClient:
             """
             
             params = {
-                "_data": "routes/__auth/shares/shareId/source"
+                "_data": "routes/__auth/shares/$shareId/source"
             }
             r = self.s.get(
                 self.base_url + "/shares/" + self.share_id +
@@ -143,7 +143,7 @@ class BobsledClient:
             """            
             data = {"locationId": location_id}
             params = {
-                "_data": "routes/__auth/shares/shareId/source"
+                "_data": "routes/__auth/shares/$shareId/source"
             }
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
@@ -162,7 +162,7 @@ class BobsledClient:
             """            
             
             params = {
-                "_data": "routes/__auth/shares/shareId/destination/new"
+                "_data": "routes/__auth/shares/$shareId/destination/new"
             }
             
             r = self.s.get(
@@ -184,7 +184,7 @@ class BobsledClient:
             """            
             data = {"cloud": "AWS", "region": location_id}
             params = {
-                "_data": "routes/__auth/shares/shareId/destination/new"
+                "_data": "routes/__auth/shares/$shareId/destination/new"
             }
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
@@ -204,7 +204,7 @@ class BobsledClient:
             :return: list of file paths
             """            
             params = {
-                "_data": "routes/__auth/shares/shareId/loadCloudData"
+                "_data": "routes/__auth/shares/$shareId/loadCloudData"
             }
             r = self.s.get(
                 self.base_url + "/shares/" + self.share_id +
@@ -233,44 +233,29 @@ class BobsledClient:
                 delivery_list.append(self.Delivery(obj["id"], self.share_id, self.s, self.base_url))
             return delivery_list
 
-        # Creates a delivery given selection of file paths in the source bucket
         def create_delivery(self, selection):
-            # if selection is a single string, then we have to handle differently
+            """Creates and returns a Delivery object given selection of file paths
+
+            :calls: `POST /shares/{share_id}/delivery`
+            :param selection: file paths for files in the source container to be included in this delivery
+            """            
 
             data = {
                 "sharedFiles": selection.__str__().replace(" ", "").replace(
                     "\'", "\"")  # we have to fit specific format
             }
+            params = {
+                "_data": "routes/__auth/shares/$shareId/delivery"
+            }
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
-                "/delivery?_data=routes%2F__auth%2Fshares%2F%24shareId%2Fdelivery",
+                "/delivery",
                 data=data)
             if r.status_code != 204:
                 print("Failed to create Delivery", r.status_code)
                 return
             print("Delivery created:", selection)
             print()
-            # hopefully we can return delivery_id
-
-        # Creates a delivery given selection of file paths in the source bucket
-        def create_delivery_test(self, selection):
-            # if selection is a single string, then we have to handle differently
-
-            data = {
-                "sharedFiles": selection.__str__().replace(" ", "").replace(
-                    "\'", "\"")  # we have to fit specific format
-            }
-            r = self.s.post(
-                self.base_url + "/shares/" + self.share_id +
-                "/driver",
-                data=data)
-            if r.status_code != 200:
-                print("Failed to create Delivery", r.status_code)
-                return
-            print(r.json())
-            print("Delivery id:", r.json()["delivery_id"])
-            return self.Delivery(r.json()["delivery_id"], self.share_id, self.s, self.base_url)
-            # print("Delivery id:", r.json()["id"])
             # hopefully we can return delivery_id
 
         # Gets a dictionary of Providers and Consumers
@@ -281,7 +266,7 @@ class BobsledClient:
             :return: dictionary representing team members
             """            
             params = {
-                "_data": "routes/__auth/shares/shareId/team"
+                "_data": "routes/__auth/shares/$shareId/team"
             }
             
             r = self.s.get(
@@ -306,7 +291,7 @@ class BobsledClient:
                 "actionType": "addUserToShare"
             }
             params = {
-                "_data": "routes/__auth/shares/shareId/team"
+                "_data": "routes/__auth/shares/$shareId/team"
             }
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
@@ -328,7 +313,7 @@ class BobsledClient:
                     "\'", "\"")
             }
             params = {
-                "_data": "routes/__auth/shares/shareId/destination/edit"
+                "_data": "routes/__auth/shares/$shareId/destination/edit"
             }
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
@@ -363,7 +348,7 @@ class BobsledClient:
                     "deliverDeliveryId": self.delivery_id
                 }
                 params = {
-                    "_data": "routes/__auth/shares/shareId"
+                    "_data": "routes/__auth/shares/$shareId"
                 }
                 r = self.s.post(
                     self.base_url + "/shares/" + self.share_id,
