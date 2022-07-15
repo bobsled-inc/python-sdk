@@ -1,6 +1,6 @@
 import requests
 
-from bobsled.utils import flatten
+from bobsled.utils import flatten, handle_errors
 from . import BobsledException
 
 class BobsledClient:
@@ -26,7 +26,7 @@ class BobsledClient:
             data=self.credentials,
             params=params)
         if response.status_code != 204:
-            raise BobsledException.BadCredentialsException(status = response.status_code, data = response.text)
+            handle_errors(response)
 
     def list_shares(self):
         """Returns a list of share_ids that can be used with get_share
@@ -43,9 +43,7 @@ class BobsledClient:
             params=params
         )
         if r.status_code != 200:
-            print(r.status_code)
-            print(r.text)
-            return []
+            handle_errors(response)
         json_shares = r.json()['shares']
         share_list_ids = []
         for share in json_shares:
@@ -72,13 +70,12 @@ class BobsledClient:
         }
         
         r = self.s.post(self.base_url +
-                        "/shares?index=&_data=routes%2F__auth%2Fshares%2Findex")
+                        "/shares",
+                        params=params)
         if r.status_code != 204:
-            print("Failed to create share", r.status_code)
-            return
+            handle_errors(response)
         header_str = r.headers["x-remix-redirect"]
         share_id = header_str[8:]
-        print("Created a share with id of:", share_id, "\n")
         return self.Share(share_id, self.s, self.base_url)
 
 
@@ -114,8 +111,7 @@ class BobsledClient:
                 data=data,
                 params=params)
             if r.status_code != 204:
-                print("error")
-                return
+                handle_errors(response)
 
         def get_source_locations(self):
             """ Retrieves and returns location_ids that can be used in set_source_location
@@ -131,9 +127,8 @@ class BobsledClient:
                 self.base_url + "/shares/" + self.share_id +
                 "/source",
                 params=params)
-            print(r.status_code)
             if r.status_code != 200:
-                return []
+                handle_errors(response)
             json_locations = r.json()['locations']
             locations_list_ids = []
             for location in json_locations:
@@ -156,8 +151,7 @@ class BobsledClient:
                 data=data,
                 params=params)
             if r.status_code != 204:
-                print("error")
-                return
+                handle_errors(response)
 
         def get_destination_locations(self):
             """Get destination locations that can be used in set_destination_location
@@ -176,8 +170,7 @@ class BobsledClient:
                 params=params
             )
             if r.status_code != 200:
-                print(r.status_code, r.text)
-                return []
+                handle_errors(response)
             locations = r.json()['availableAwsRegions']
             return locations
 
@@ -197,10 +190,7 @@ class BobsledClient:
                 data=data,
                 params=params)
             if r.status_code != 204:
-                print("error")
-                return
-            print("Destination location changed to:", location_id)
-            print()
+                handle_errors(response)
 
         def get_folder_contents(self):
             """Returns flattened contents of all files in source location
@@ -216,8 +206,7 @@ class BobsledClient:
                 "/loadCloudData",
                 params=params)
             if r.status_code != 200:
-                print("Cannot get folder contents", r.status_code)
-                return []
+                handle_errors(response)
             folderContents = r.json()['folderContents']
             return flatten(folderContents)
 
@@ -255,8 +244,7 @@ class BobsledClient:
                 data=data,
                 params=params)
             if r.status_code != 200:
-                print("Failed to create Delivery", r.status_code)
-                return
+                handle_errors(response)
             return self.Delivery(r.json()["delivery_id"], self.share_id, self.s, self.base_url)
 
         def get_team(self):
@@ -274,8 +262,7 @@ class BobsledClient:
                 "/team",
                 params=params)
             if r.status_code != 200:
-                print("error")
-                return
+                handle_errors(response)
             return r.json()
 
         def add_consumer(self, consumer_email):
@@ -298,9 +285,7 @@ class BobsledClient:
                 data=data,
                 params=params)
             if r.status_code != 200:
-                print("Cannot add consumer", r.status_code, r.text)
-                return
-            print(consumer_email, "added as a consumer")
+                handle_errors(response)
 
         def send_invitation(self, id):
             # Provide email, calls getTeam to get according id, then POSTs to the right id?
@@ -324,10 +309,7 @@ class BobsledClient:
                 "/destination/edit",
                 data=data)
             if r.status_code != 204:
-                print("Cannot add ARN")
-                print(r.status_code)
-                print(r.text)
-                return
+                handle_errors(response)
 
         class Delivery:
             """
@@ -361,9 +343,7 @@ class BobsledClient:
                     data=data,
                     params=params)
                 if not (200 <= r.status_code < 300):
-                    print("Delivery failed")
-                    return
-                print("Delivery succeeded")
+                    handle_errors(response)
 
             def edit_delivery(self):
                 # Unimplemented

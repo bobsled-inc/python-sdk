@@ -22,7 +22,17 @@ class BobsledException(Exception):
         """
         return self.__data
 
-class BadCredentialsException(BobsledException):
+class BadCredentialsError(BobsledException):
     """
     Exception raised in case of bad credentials (when Bobsled replies with a 401 or 403 HTML status)
+    """
+    
+class InternalServerError(BobsledException):
+    """
+    Exception raised when something cannot be resolved in the internal server (when Bobsled replies with a 500 HTML status)
+    """
+    
+class UnkownObjectError(BobsledException):
+    """
+    Exception raised when requested object is not found (when Bobsled replies with a 404 HTML status)
     """
