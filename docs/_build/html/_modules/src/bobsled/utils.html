@@ -64,23 +64,34 @@
            <div itemprop="articleBody">
              
   <h1>Source code for src.bobsled.utils</h1><div class="highlight"><pre>
-<span></span>
+<span></span><span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">BobsledException</span>
+
+<div class="viewcode-block" id="handle_errors"><a class="viewcode-back" href="../../../bobsled.html#src.bobsled.utils.handle_errors">[docs]</a><span class="k">def</span> <span class="nf">handle_errors</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">401</span> <span class="ow">or</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">403</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">BobsledException</span><span class="o">.</span><span class="n">BadCredentialsError</span><span class="p">(</span><span class="n">status</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;message&quot;</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">404</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">BobsledException</span><span class="o">.</span><span class="n">UnknownObjectError</span><span class="p">(</span><span class="n">status</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;message&quot;</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">500</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">BobsledException</span><span class="o">.</span><span class="n">InternalServerError</span><span class="p">(</span><span class="n">status</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;message&quot;</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">BobsledException</span><span class="p">(</span><span class="n">status</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;message&quot;</span><span class="p">])</span></div>
+
 <div class="viewcode-block" id="flatten"><a class="viewcode-back" href="../../../bobsled.html#src.bobsled.utils.flatten">[docs]</a><span class="k">def</span> <span class="nf">flatten</span><span class="p">(</span><span class="n">contents</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;s3://rhizo-your-bucket-name&quot;</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot;Helper function to flatten contents of source bucket</span>
+    <span class="sd">&quot;&quot;&quot;Helper function to flatten contents of source bucket</span>
 
-<span class="sd">  :param contents: dictionary representing source bucket</span>
-<span class="sd">  :param prefix: root path of the bucket</span>
-<span class="sd">  :return: list of complete file paths for all files in source bucket</span>
-<span class="sd">  &quot;&quot;&quot;</span>  
-  <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="sd">    :param contents: dictionary representing source bucket</span>
+<span class="sd">    :param prefix: root path of the bucket</span>
+<span class="sd">    :return: list of complete file paths for all files in source bucket</span>
+<span class="sd">    &quot;&quot;&quot;</span>  
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
 
-  <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">contents</span><span class="p">:</span>
-      <span class="k">if</span> <span class="n">obj</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">obj</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">])</span>
-      <span class="k">else</span><span class="p">:</span>
-          <span class="n">result</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">flatten</span><span class="p">(</span><span class="n">obj</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">]))</span>
+    <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">contents</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">obj</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+          <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">obj</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">flatten</span><span class="p">(</span><span class="n">obj</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">]))</span>
 
-  <span class="k">return</span> <span class="n">result</span></div>
+    <span class="k">return</span> <span class="n">result</span></div>
   
 </pre></div>
 

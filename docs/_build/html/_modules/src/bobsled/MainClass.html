@@ -66,7 +66,7 @@
   <h1>Source code for src.bobsled.MainClass</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">requests</span>
 
-<span class="kn">from</span> <span class="nn">bobsled.utils</span> <span class="kn">import</span> <span class="n">flatten</span>
+<span class="kn">from</span> <span class="nn">bobsled.utils</span> <span class="kn">import</span> <span class="n">flatten</span><span class="p">,</span> <span class="n">handle_errors</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">BobsledException</span>
 
 <div class="viewcode-block" id="BobsledClient"><a class="viewcode-back" href="../../../bobsled.html#src.bobsled.MainClass.BobsledClient">[docs]</a><span class="k">class</span> <span class="nc">BobsledClient</span><span class="p">:</span>
@@ -87,12 +87,12 @@
             <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/testing/signInWithEmailAndPassword&quot;</span>
         <span class="p">}</span>
         
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
             <span class="s2">&quot;http://127.0.0.1:3000&quot;</span> <span class="o">+</span> <span class="s2">&quot;/testing/signinwithemailandpassword&quot;</span><span class="p">,</span>
             <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">credentials</span><span class="p">,</span>
             <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">204</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">BobsledException</span><span class="o">.</span><span class="n">BadCredentialsException</span><span class="p">(</span><span class="n">status</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">204</span><span class="p">:</span>
+            <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
 
 <div class="viewcode-block" id="BobsledClient.list_shares"><a class="viewcode-back" href="../../../bobsled.html#src.bobsled.MainClass.BobsledClient.list_shares">[docs]</a>    <span class="k">def</span> <span class="nf">list_shares</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a list of share_ids that can be used with get_share</span>
@@ -109,9 +109,7 @@
             <span class="n">params</span><span class="o">=</span><span class="n">params</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-            <span class="k">return</span> <span class="p">[]</span>
+            <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
         <span class="n">json_shares</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;shares&#39;</span><span class="p">]</span>
         <span class="n">share_list_ids</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">share</span> <span class="ow">in</span> <span class="n">json_shares</span><span class="p">:</span>
@@ -119,6 +117,11 @@
         <span class="k">return</span> <span class="n">share_list_ids</span></div>
 
 <div class="viewcode-block" id="BobsledClient.get_share"><a class="viewcode-back" href="../../../bobsled.html#src.bobsled.MainClass.BobsledClient.get_share">[docs]</a>    <span class="k">def</span> <span class="nf">get_share</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">share_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the Share with given share_id</span>
+
+<span class="sd">        :param share_id: unique id of share</span>
+<span class="sd">        :return: Share object</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Share</span><span class="p">(</span><span class="n">share_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BobsledClient.create_share"><a class="viewcode-back" href="../../../bobsled.html#src.bobsled.MainClass.BobsledClient.create_share">[docs]</a>    <span class="k">def</span> <span class="nf">create_share</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -133,13 +136,12 @@
         <span class="p">}</span>
         
         <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span>
-                        <span class="s2">&quot;/shares?index=&amp;_data=routes</span><span class="si">%2F</span><span class="s2">__auth</span><span class="si">%2F</span><span class="s2">shares</span><span class="si">%2F</span><span class="s2">index&quot;</span><span class="p">)</span>
+                        <span class="s2">&quot;/shares&quot;</span><span class="p">,</span>
+                        <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">204</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Failed to create share&quot;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
-            <span class="k">return</span>
+            <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
         <span class="n">header_str</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;x-remix-redirect&quot;</span><span class="p">]</span>
         <span class="n">share_id</span> <span class="o">=</span> <span class="n">header_str</span><span class="p">[</span><span class="mi">8</span><span class="p">:]</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Created a share with id of:&quot;</span><span class="p">,</span> <span class="n">share_id</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Share</span><span class="p">(</span><span class="n">share_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="p">)</span></div>
 
 
@@ -175,8 +177,7 @@
                 <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
                 <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">204</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">)</span>
-                <span class="k">return</span></div>
+                <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BobsledClient.Share.get_source_locations"><a class="viewcode-back" href="../../../bobsled.html#src.bobsled.MainClass.BobsledClient.Share.get_source_locations">[docs]</a>        <span class="k">def</span> <span class="nf">get_source_locations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot; Retrieves and returns location_ids that can be used in set_source_location</span>
@@ -192,9 +193,8 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">+</span>
                 <span class="s2">&quot;/source&quot;</span><span class="p">,</span>
                 <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
-                <span class="k">return</span> <span class="p">[]</span>
+                <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
             <span class="n">json_locations</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;locations&#39;</span><span class="p">]</span>
             <span class="n">locations_list_ids</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">location</span> <span class="ow">in</span> <span class="n">json_locations</span><span class="p">:</span>
@@ -217,8 +217,7 @@
                 <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
                 <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">204</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">)</span>
-                <span class="k">return</span></div>
+                <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BobsledClient.Share.get_destination_locations"><a class="viewcode-back" href="../../../bobsled.html#src.bobsled.MainClass.BobsledClient.Share.get_destination_locations">[docs]</a>        <span class="k">def</span> <span class="nf">get_destination_locations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;Get destination locations that can be used in set_destination_location</span>
@@ -237,18 +236,18 @@
                 <span class="n">params</span><span class="o">=</span><span class="n">params</span>
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-                <span class="k">return</span> <span class="p">[]</span>
-            <span class="n">locations</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;availableAwsRegions&#39;</span><span class="p">]</span>
-            <span class="k">return</span> <span class="n">locations</span></div>
+                <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="BobsledClient.Share.set_destination_location"><a class="viewcode-back" href="../../../bobsled.html#src.bobsled.MainClass.BobsledClient.Share.set_destination_location">[docs]</a>        <span class="k">def</span> <span class="nf">set_destination_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location_id</span><span class="p">):</span>
+<div class="viewcode-block" id="BobsledClient.Share.set_destination_location"><a class="viewcode-back" href="../../../bobsled.html#src.bobsled.MainClass.BobsledClient.Share.set_destination_location">[docs]</a>        <span class="k">def</span> <span class="nf">set_destination_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cloud</span><span class="p">,</span> <span class="n">region</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;Sets destination location of this share to given cloud and location_id (region?)</span>
 
 <span class="sd">            :calls: `POST /shares/{share_id}/destination/new`</span>
-<span class="sd">            :param location_id: something</span>
-<span class="sd">            &quot;&quot;&quot;</span>            
-            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cloud&quot;</span><span class="p">:</span> <span class="s2">&quot;AWS&quot;</span><span class="p">,</span> <span class="s2">&quot;region&quot;</span><span class="p">:</span> <span class="n">location_id</span><span class="p">}</span>
+<span class="sd">            :param cloud: cloud provider (e.g. AWS)</span>
+<span class="sd">            :param region: id of a region inside the cloud</span>
+<span class="sd">            &quot;&quot;&quot;</span>         
+               
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cloud&quot;</span><span class="p">:</span> <span class="n">cloud</span><span class="p">,</span> <span class="s2">&quot;region&quot;</span><span class="p">:</span> <span class="n">region</span><span class="p">}</span>
             <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares/$shareId/destination/new&quot;</span>
             <span class="p">}</span>
@@ -258,10 +257,7 @@
                 <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
                 <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">204</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">)</span>
-                <span class="k">return</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Destination location changed to:&quot;</span><span class="p">,</span> <span class="n">location_id</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">()</span></div>
+                <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BobsledClient.Share.get_folder_contents"><a class="viewcode-back" href="../../../bobsled.html#src.bobsled.MainClass.BobsledClient.Share.get_folder_contents">[docs]</a>        <span class="k">def</span> <span class="nf">get_folder_contents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;Returns flattened contents of all files in source location</span>
@@ -277,11 +273,8 @@
                 <span class="s2">&quot;/loadCloudData&quot;</span><span class="p">,</span>
                 <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cannot get folder contents&quot;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
-                <span class="k">return</span> <span class="p">[]</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+                <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
             <span class="n">folderContents</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;folderContents&#39;</span><span class="p">]</span>
-            <span class="c1"># figure out a better way to flatten maybe?</span>
             <span class="k">return</span> <span class="n">flatten</span><span class="p">(</span><span class="n">folderContents</span><span class="p">)</span></div>
 
         <span class="c1"># NEED TO CHANGE THIS</span>
@@ -293,7 +286,6 @@
 <span class="sd">            &quot;&quot;&quot;</span>            
             <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">+</span>
                 <span class="s2">&quot;/driver&quot;</span><span class="p">)</span>
-            <span class="c1">#print(r.text)</span>
             <span class="n">delivery_list</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">():</span>
                 <span class="n">delivery_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Delivery</span><span class="p">(</span><span class="n">obj</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="p">))</span>
@@ -308,7 +300,8 @@
 
             <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="s2">&quot;sharedFiles&quot;</span><span class="p">:</span> <span class="n">selection</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
-                    <span class="s2">&quot;</span><span class="se">\&#39;</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># we have to fit specific format</span>
+                    <span class="s2">&quot;</span><span class="se">\&#39;</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">),</span>  <span class="c1"># we have to fit specific format</span>
+                <span class="s2">&quot;totalSize&quot;</span><span class="p">:</span> <span class="s2">&quot;1000&quot;</span>
             <span class="p">}</span>
             <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares/$shareId/delivery&quot;</span>
@@ -316,15 +309,14 @@
             <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">+</span>
                 <span class="s2">&quot;/delivery&quot;</span><span class="p">,</span>
-                <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">204</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Failed to create Delivery&quot;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
-                <span class="k">return</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Delivery created:&quot;</span><span class="p">,</span> <span class="n">selection</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">()</span></div>
-            <span class="c1"># hopefully we can return delivery_id</span>
+                <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+                <span class="n">allow_redirects</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">302</span><span class="p">:</span>
+                <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+            
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Delivery</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="p">)</span></div>
 
-        <span class="c1"># Gets a dictionary of Providers and Consumers</span>
 <div class="viewcode-block" id="BobsledClient.Share.get_team"><a class="viewcode-back" href="../../../bobsled.html#src.bobsled.MainClass.BobsledClient.Share.get_team">[docs]</a>        <span class="k">def</span> <span class="nf">get_team</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;Returns team members</span>
 
@@ -340,11 +332,9 @@
                 <span class="s2">&quot;/team&quot;</span><span class="p">,</span>
                 <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">)</span>
-                <span class="k">return</span>
+                <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
 
-        <span class="c1"># Add a Consumer using email</span>
 <div class="viewcode-block" id="BobsledClient.Share.add_consumer"><a class="viewcode-back" href="../../../bobsled.html#src.bobsled.MainClass.BobsledClient.Share.add_consumer">[docs]</a>        <span class="k">def</span> <span class="nf">add_consumer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">consumer_email</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;Adds a consumer by given email</span>
 
@@ -365,15 +355,18 @@
                 <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
                 <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cannot add consumer&quot;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-                <span class="k">return</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">consumer_email</span><span class="p">,</span> <span class="s2">&quot;added as a consumer&quot;</span><span class="p">)</span></div>
+                <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BobsledClient.Share.send_invitation"><a class="viewcode-back" href="../../../bobsled.html#src.bobsled.MainClass.BobsledClient.Share.send_invitation">[docs]</a>        <span class="k">def</span> <span class="nf">send_invitation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
             <span class="c1"># Provide email, calls getTeam to get according id, then POSTs to the right id?</span>
-            <span class="k">return</span> <span class="s2">&quot;unimplemented&quot;</span></div>
+            <span class="c1"># Unimplemented</span>
+            <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="BobsledClient.Share.edit_access_identifiers"><a class="viewcode-back" href="../../../bobsled.html#src.bobsled.MainClass.BobsledClient.Share.edit_access_identifiers">[docs]</a>        <span class="k">def</span> <span class="nf">edit_access_identifiers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ARN_list</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Edit access identifiers of this share</span>
+
+<span class="sd">            :param ARN_list: list of access identifiers for this share</span>
+<span class="sd">            &quot;&quot;&quot;</span>            
             <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="s2">&quot;accessIdentifiers&quot;</span><span class="p">:</span> <span class="n">ARN_list</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
                     <span class="s2">&quot;</span><span class="se">\&#39;</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -386,30 +379,29 @@
                 <span class="s2">&quot;/destination/edit&quot;</span><span class="p">,</span>
                 <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">204</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cannot add ARN&quot;</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-                <span class="k">return</span></div>
+                <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BobsledClient.Share.Delivery"><a class="viewcode-back" href="../../../bobsled.html#src.bobsled.MainClass.BobsledClient.Share.Delivery">[docs]</a>        <span class="k">class</span> <span class="nc">Delivery</span><span class="p">:</span>
             <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            This class represents a delivery, and should only be acquired by the user through calling get_delivery or create_delivery on a Share</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delivery_id</span><span class="p">,</span> <span class="n">share_id</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">base_url</span><span class="p">):</span>
-                <span class="c1"># Maybe also store delivery name? </span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">delivery_id</span> <span class="o">=</span> <span class="n">delivery_id</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">=</span> <span class="n">share_id</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">session</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">=</span> <span class="n">base_url</span>
-            
-            <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                <span class="c1"># Use delivery name instead of id</span>
-                <span class="k">return</span> <span class="s2">&quot;Delivery(&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">delivery_id</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
 
+            <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
+                        
             <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                 <span class="k">return</span> <span class="s2">&quot;Delivery(&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">delivery_id</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
 
 <div class="viewcode-block" id="BobsledClient.Share.Delivery.deliver_delivery"><a class="viewcode-back" href="../../../bobsled.html#src.bobsled.MainClass.BobsledClient.Share.Delivery.deliver_delivery">[docs]</a>            <span class="k">def</span> <span class="nf">deliver_delivery</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="sd">&quot;&quot;&quot;Delivers this Delivery</span>
+<span class="sd">                </span>
+<span class="sd">                :calls: `POST /shares/{share_id}`</span>
+<span class="sd">                &quot;&quot;&quot;</span>                
                 <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
                     <span class="s2">&quot;deliverDeliveryId&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">delivery_id</span>
                 <span class="p">}</span>
@@ -421,9 +413,7 @@
                     <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
                     <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">200</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">&lt;</span> <span class="mi">300</span><span class="p">):</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Delivery failed&quot;</span><span class="p">)</span>
-                    <span class="k">return</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Delivery succeeded&quot;</span><span class="p">)</span></div>
+                    <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BobsledClient.Share.Delivery.edit_delivery"><a class="viewcode-back" href="../../../bobsled.html#src.bobsled.MainClass.BobsledClient.Share.Delivery.edit_delivery">[docs]</a>            <span class="k">def</span> <span class="nf">edit_delivery</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                 <span class="c1"># Unimplemented</span>

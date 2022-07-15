@@ -72,11 +72,35 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__status</span> <span class="o">=</span> <span class="n">status</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__data</span> <span class="o">=</span> <span class="n">data</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__data</span> <span class="o">=</span> <span class="n">data</span>
+        
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The status returned by the Bobsled API</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__status</span>
 
-<div class="viewcode-block" id="BadCredentialsException"><a class="viewcode-back" href="../../../bobsled.html#src.bobsled.BobsledException.BadCredentialsException">[docs]</a><span class="k">class</span> <span class="nc">BadCredentialsException</span><span class="p">(</span><span class="n">BobsledException</span><span class="p">):</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The data returned by the Bobsled API</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__data</span></div>
+
+<div class="viewcode-block" id="BadCredentialsError"><a class="viewcode-back" href="../../../bobsled.html#src.bobsled.BobsledException.BadCredentialsError">[docs]</a><span class="k">class</span> <span class="nc">BadCredentialsError</span><span class="p">(</span><span class="n">BobsledException</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Exception raised in case of bad credentials (when Bobsled replies with a 401 or 403 HTML status)</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+    
+<div class="viewcode-block" id="InternalServerError"><a class="viewcode-back" href="../../../bobsled.html#src.bobsled.BobsledException.InternalServerError">[docs]</a><span class="k">class</span> <span class="nc">InternalServerError</span><span class="p">(</span><span class="n">BobsledException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Exception raised when something cannot be resolved in the internal server (when Bobsled replies with a 500 HTML status)</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+    
+<div class="viewcode-block" id="UnknownObjectError"><a class="viewcode-back" href="../../../bobsled.html#src.bobsled.BobsledException.UnknownObjectError">[docs]</a><span class="k">class</span> <span class="nc">UnknownObjectError</span><span class="p">(</span><span class="n">BobsledException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Exception raised when requested object is not found (when Bobsled replies with a 404 HTML status)</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 </pre></div>
 

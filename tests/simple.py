@@ -17,9 +17,15 @@ try:
     source_locations = share.get_source_locations()
     share.set_source_location(source_locations[0])
     
+    # Set share destination location
+    destination_locations = share.get_destination_locations()
+    share.set_destination_location("AWS", "eu-west-1")
+    
     # Create Delivery
+    print("creating delivery")
     folder_contents = share.get_folder_contents()
     delivery = share.create_delivery(folder_contents)
+    
     
     print(delivery)
 except BobsledException as err:

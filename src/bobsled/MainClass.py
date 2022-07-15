@@ -171,16 +171,17 @@ class BobsledClient:
             )
             if r.status_code != 200:
                 handle_errors(r)
-            locations = r.json()['availableAwsRegions']
-            return locations
+            return r.json()
 
-        def set_destination_location(self, location_id):
+        def set_destination_location(self, cloud, region):
             """Sets destination location of this share to given cloud and location_id (region?)
 
             :calls: `POST /shares/{share_id}/destination/new`
-            :param location_id: something
-            """            
-            data = {"cloud": "AWS", "region": location_id}
+            :param cloud: cloud provider (e.g. AWS)
+            :param region: id of a region inside the cloud
+            """         
+               
+            data = {"cloud": cloud, "region": region}
             params = {
                 "_data": "routes/__auth/shares/$shareId/destination/new"
             }
@@ -233,7 +234,8 @@ class BobsledClient:
 
             data = {
                 "sharedFiles": selection.__str__().replace(" ", "").replace(
-                    "\'", "\"")  # we have to fit specific format
+                    "\'", "\""),  # we have to fit specific format
+                "totalSize": "1000"
             }
             params = {
                 "_data": "routes/__auth/shares/$shareId/delivery"
@@ -242,10 +244,12 @@ class BobsledClient:
                 self.base_url + "/shares/" + self.share_id +
                 "/delivery",
                 data=data,
-                params=params)
-            if r.status_code != 200:
+                allow_redirects=False)
+            
+            if r.status_code != 302:
                 handle_errors(r)
-            return self.Delivery(r.json()["delivery_id"], self.share_id, self.s, self.base_url)
+            
+            return self.Delivery(r.text, self.share_id, self.s, self.base_url)
 
         def get_team(self):
             """Returns team members
