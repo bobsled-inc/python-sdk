@@ -21,12 +21,12 @@ class BobsledClient:
             "_data": "routes/testing/signInWithEmailAndPassword"
         }
         
-        response = self.s.post(
+        r = self.s.post(
             "http://127.0.0.1:3000" + "/testing/signinwithemailandpassword",
             data=self.credentials,
             params=params)
-        if response.status_code != 204:
-            handle_errors(response)
+        if r.status_code != 204:
+            handle_errors(r)
 
     def list_shares(self):
         """Returns a list of share_ids that can be used with get_share
@@ -43,7 +43,7 @@ class BobsledClient:
             params=params
         )
         if r.status_code != 200:
-            handle_errors(response)
+            handle_errors(r)
         json_shares = r.json()['shares']
         share_list_ids = []
         for share in json_shares:
@@ -73,7 +73,7 @@ class BobsledClient:
                         "/shares",
                         params=params)
         if r.status_code != 204:
-            handle_errors(response)
+            handle_errors(r)
         header_str = r.headers["x-remix-redirect"]
         share_id = header_str[8:]
         return self.Share(share_id, self.s, self.base_url)
@@ -111,7 +111,7 @@ class BobsledClient:
                 data=data,
                 params=params)
             if r.status_code != 204:
-                handle_errors(response)
+                handle_errors(r)
 
         def get_source_locations(self):
             """ Retrieves and returns location_ids that can be used in set_source_location
@@ -128,7 +128,7 @@ class BobsledClient:
                 "/source",
                 params=params)
             if r.status_code != 200:
-                handle_errors(response)
+                handle_errors(r)
             json_locations = r.json()['locations']
             locations_list_ids = []
             for location in json_locations:
@@ -151,7 +151,7 @@ class BobsledClient:
                 data=data,
                 params=params)
             if r.status_code != 204:
-                handle_errors(response)
+                handle_errors(r)
 
         def get_destination_locations(self):
             """Get destination locations that can be used in set_destination_location
@@ -170,7 +170,7 @@ class BobsledClient:
                 params=params
             )
             if r.status_code != 200:
-                handle_errors(response)
+                handle_errors(r)
             locations = r.json()['availableAwsRegions']
             return locations
 
@@ -190,7 +190,7 @@ class BobsledClient:
                 data=data,
                 params=params)
             if r.status_code != 204:
-                handle_errors(response)
+                handle_errors(r)
 
         def get_folder_contents(self):
             """Returns flattened contents of all files in source location
@@ -206,7 +206,7 @@ class BobsledClient:
                 "/loadCloudData",
                 params=params)
             if r.status_code != 200:
-                handle_errors(response)
+                handle_errors(r)
             folderContents = r.json()['folderContents']
             return flatten(folderContents)
 
@@ -244,7 +244,7 @@ class BobsledClient:
                 data=data,
                 params=params)
             if r.status_code != 200:
-                handle_errors(response)
+                handle_errors(r)
             return self.Delivery(r.json()["delivery_id"], self.share_id, self.s, self.base_url)
 
         def get_team(self):
@@ -262,7 +262,7 @@ class BobsledClient:
                 "/team",
                 params=params)
             if r.status_code != 200:
-                handle_errors(response)
+                handle_errors(r)
             return r.json()
 
         def add_consumer(self, consumer_email):
@@ -285,7 +285,7 @@ class BobsledClient:
                 data=data,
                 params=params)
             if r.status_code != 200:
-                handle_errors(response)
+                handle_errors(r)
 
         def send_invitation(self, id):
             # Provide email, calls getTeam to get according id, then POSTs to the right id?
@@ -309,7 +309,7 @@ class BobsledClient:
                 "/destination/edit",
                 data=data)
             if r.status_code != 204:
-                handle_errors(response)
+                handle_errors(r)
 
         class Delivery:
             """
@@ -343,7 +343,7 @@ class BobsledClient:
                     data=data,
                     params=params)
                 if not (200 <= r.status_code < 300):
-                    handle_errors(response)
+                    handle_errors(r)
 
             def edit_delivery(self):
                 # Unimplemented

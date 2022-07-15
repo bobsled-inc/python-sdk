@@ -4,3 +4,10 @@ From its methods, you will obtain instances of all Bobsled objects.
 """
 
 from bobsled.MainClass import BobsledClient
+
+from .BobsledException import (
+    BobsledException,
+    BadCredentialsError,
+    InternalServerError,
+    UnknownObjectError
+)

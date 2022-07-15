@@ -1,14 +1,14 @@
 from . import BobsledException
 
 def handle_errors(response):
-    if response.status_code == 401 or 403:
-        raise BobsledException.BadCredentialsException(status = response.status_code, data = response.text)
+    if response.status_code == 401 or response.status_code == 403:
+        raise BobsledException.BadCredentialsError(status = response.status_code, data = response.json()["message"])
     elif response.status_code == 404:
-        raise BobsledException.UnkownObjectError(status = response.status_code, data = response.text)
+        raise BobsledException.UnknownObjectError(status = response.status_code, data = response.json()["message"])
     elif response.status_code == 500:
-        raise BobsledException.InternalServerError(status = response.status_code, data = response.text)
+        raise BobsledException.InternalServerError(status = response.status_code, data = response.json()["message"])
     else:
-        raise BobsledException(status = response.status_code, data = response.text)
+        raise BobsledException(status = response.status_code, data = response.json()["message"])
 
 def flatten(contents, prefix="s3://rhizo-your-bucket-name"):
     """Helper function to flatten contents of source bucket

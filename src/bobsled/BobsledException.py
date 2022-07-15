@@ -32,7 +32,7 @@ class InternalServerError(BobsledException):
     Exception raised when something cannot be resolved in the internal server (when Bobsled replies with a 500 HTML status)
     """
     
-class UnkownObjectError(BobsledException):
+class UnknownObjectError(BobsledException):
     """
     Exception raised when requested object is not found (when Bobsled replies with a 404 HTML status)
     """
