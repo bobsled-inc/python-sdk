@@ -87,6 +87,16 @@ class BobsledClient:
             self.share_id = share_id
             self.s = session
             self.base_url = base_url
+            
+            params = {"_data": "routes/__auth/shares/$shareId"}
+            
+            r = self.s.get(
+                self.base_url + "/shares/" + self.share_id,
+                params=params
+            )
+            
+            if r.status_code != 200:
+                handle_errors(r)
 
         def get_id(self):
             return self.share_id
@@ -141,7 +151,9 @@ class BobsledClient:
             :calls: `POST /shares/{share_id}/source`
             :param location_id: unique identifier of a source container
             """            
-            data = {"locationId": location_id}
+            data = {"locationIdJs": location_id,
+                    "locationId": location_id,
+                    }
             params = {
                 "_data": "routes/__auth/shares/$shareId/source"
             }
