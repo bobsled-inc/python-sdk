@@ -7,7 +7,7 @@ Submodules
 Module contents
 ---------------
 
-.. automodule:: src.bobsled
+.. automodule:: bobsled
    :members:
    :undoc-members:
    :show-inheritance:
@@ -15,7 +15,7 @@ Module contents
 bobsled.MainClass module
 ------------------------
 
-.. automodule:: src.bobsled.MainClass
+.. automodule:: bobsled.MainClass
    :members:
    :undoc-members:
    :show-inheritance:
@@ -23,7 +23,7 @@ bobsled.MainClass module
 bobsled.BobsledException module
 -------------------------------
 
-.. automodule:: src.bobsled.BobsledException
+.. automodule:: bobsled.BobsledException
    :members:
    :undoc-members:
    :show-inheritance:
@@ -31,7 +31,7 @@ bobsled.BobsledException module
 bobsled.utils module
 --------------------
 
-.. automodule:: src.bobsled.utils
+.. automodule:: bobsled.utils
    :members:
    :undoc-members:
    :show-inheritance:
