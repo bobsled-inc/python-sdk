@@ -100,6 +100,12 @@ class BobsledClient:
 
         def get_id(self):
             return self.share_id
+        
+        def update(self, params):
+            
+            
+            
+            return None
 
         def change_overview(self, name, description):
             """Changes overview text of the share
@@ -303,10 +309,29 @@ class BobsledClient:
             if r.status_code != 200:
                 handle_errors(r)
 
+        # Currently this takes id (not email), which can be unintuitive to the user
         def send_invitation(self, id):
-            # Provide email, calls getTeam to get according id, then POSTs to the right id?
-            # Unimplemented
-            pass
+            """Sends the invitation to added member
+
+            :param id: id of the member (not email)
+            """            
+            data = {
+                "memberToReceiveInvitationId": id,
+                "actionType": "sendEmail"
+            }
+            
+            params = {
+                "_data": "routes/__auth/shares/$shareId/team"
+            }
+            
+            r = self.s.post(
+                self.base_url + "/shares/" + self.share_id +
+                "/team",
+                data=data,
+                params=params
+            )
+            if r.status_code != 200:
+                handle_errors(r)
 
         def edit_access_identifiers(self, ARN_list):
             """Edit access identifiers of this share

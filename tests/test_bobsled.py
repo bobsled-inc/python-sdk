@@ -4,21 +4,19 @@ import pytest
 
 base_url = "http://127.0.0.1:8080"
 
+credentials = { "email": "danny@bobsled.co",
+        "password": "bobsledding_it"
+}
+
 class TestClass:
     
-    
     def test_create_delivery(self):
-        
-        credentials = { "email": "danny@bobsled.co",
-                "password": "bobsledding_it"
-        }
         
         # Instantiate Client
         b = BobsledClient(credentials, base_url)
         
         # Get share object
-        # share = b.create_share()
-        share = b.get_share("86d58ea0-06c5-11ed-a3fb-3d088eb19fb2")
+        share = b.create_share()
         
         # Set share source location
         source_locations = share.get_source_locations()
@@ -41,4 +39,10 @@ class TestClass:
                         "password": "joe"}
         
         with pytest.raises(BadCredentialsError):
-            BobsledClient(credentials, base_url)
+            b = BobsledClient(credentials, base_url)
+            
+    def test_share_not_found(self):
+        b = BobsledClient(credentials, base_url)
+        
+        with pytest.raises(UnknownObjectError):
+            share = b.get_share("invalid-id")
