@@ -2,7 +2,7 @@ from . import BobsledException
 
 def handle_errors(response):
     if response.status_code == 401 or response.status_code == 403:
-        raise BobsledException.BadCredentialsError(status = response.status_code, data = response.json()["message"])
+        raise BobsledException.BadCredentialsError(status = response.status_code, data = response.json()["errorType"]) # errorType might change?
     elif response.status_code == 404:
         raise BobsledException.UnknownObjectError(status = response.status_code, data = response.json()["message"])
     elif response.status_code == 500:

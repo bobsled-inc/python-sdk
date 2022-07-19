@@ -1,7 +1,12 @@
 from bobsled import BobsledClient
 from bobsled import BobsledException, BadCredentialsError, InternalServerError, UnknownObjectError
+import pytest
+
+base_url = "http://127.0.0.1:8080"
 
 class TestClass:
+    
+    
     def test_create_delivery(self):
         
         credentials = { "email": "danny@bobsled.co",
@@ -9,7 +14,7 @@ class TestClass:
         }
         
         # Instantiate Client
-        b = BobsledClient(credentials, "http://127.0.0.1:8080")
+        b = BobsledClient(credentials, base_url)
         
         # Get share object
         # share = b.create_share()
@@ -30,3 +35,10 @@ class TestClass:
         # Delivering the Delivery
         delivery.deliver_delivery()
         print("Delivery delivered")
+        
+    def test_bad_credentials(self):
+        credentials = { "email": "joe@joe.com",
+                        "password": "joe"}
+        
+        with pytest.raises(BadCredentialsError):
+            BobsledClient(credentials, base_url)
