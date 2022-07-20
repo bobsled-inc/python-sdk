@@ -101,14 +101,42 @@ class BobsledClient:
         def get_id(self):
             return self.share_id
         
+        def get_share_information(self):
+            """Retrieves and returns full information on the share
+            
+            :calls: `GET /shares/{share_id}
+            :return: Dictionary containing full information on the share
+            """            
+            params = {"_data": "routes/__auth/shares/$shareId"}
+            
+            r = self.s.get(
+                self.base_url + "/shares/" + self.share_id,
+                params=params
+            )
+            
+            if r.status_code != 200:
+                handle_errors(r)
+            
+            return r.json()
+        
+        # WIP
         def update(self, params):
+            """Updates share according to parameters provided in params
+                        
+            :param params: dictionary containing several optional fields
+            """            
             
+            r = self.s.post(
+                self.base_url + "/shares/" + self.share_id + 
+                "/driver",
+                data=params
+            )
             
-            
-            return None
+            if r.status_code != 200:
+                handle_errors(r)
 
-        def change_overview(self, name, description):
-            """Changes overview text of the share
+        def set_overview(self, name, description):
+            """Sets overview text of the share
             
             :calls: `GET /shares/{share_id}/overview`
             """
@@ -130,7 +158,7 @@ class BobsledClient:
                 handle_errors(r)
 
         def get_source_locations(self):
-            """ Retrieves and returns location_ids that can be used in set_source_location
+            """Retrieves and returns location_ids that can be used in set_source_location
             
             :calls: `GET /shares/{share_id}/source`
             :return: list of location_ids
@@ -227,7 +255,10 @@ class BobsledClient:
             if r.status_code != 200:
                 handle_errors(r)
             folderContents = r.json()['folderContents']
-            return flatten(folderContents)
+            
+            prefix = self.get_share_information()["share"]["sourceLocation"]["url"]
+            
+            return flatten(folderContents, prefix)
 
         # NEED TO CHANGE THIS
         def get_deliveries(self):
@@ -253,11 +284,11 @@ class BobsledClient:
             data = {
                 "sharedFiles": selection.__str__().replace(" ", "").replace(
                     "\'", "\""),  # we have to fit specific format
-                "totalSize": "1000"
+                "totalSize": "1000" # placeholder
             }
-            params = {
-                "_data": "routes/__auth/shares/$shareId/delivery"
-            }
+            # params = {
+            #     "_data": "routes/__auth/shares/$shareId/delivery"
+            # }
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
                 "/delivery",
