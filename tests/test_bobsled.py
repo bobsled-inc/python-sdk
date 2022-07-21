@@ -9,7 +9,6 @@ credentials = { "email": "danny@bobsled.co",
 }
 
 class TestClass:
-    
     def test_create_delivery(self):
         
         # Instantiate Client
@@ -20,7 +19,7 @@ class TestClass:
         
         # Set share source location
         source_locations = share.get_source_locations()
-        share.set_source_location(source_locations[0])
+        share.set_source_location(source_locations[0]["id"])
         
         # Set share destination location
         destination_locations = share.get_destination_locations()
@@ -32,17 +31,40 @@ class TestClass:
         
         # Delivering the Delivery
         delivery.deliver_delivery()
-        print("Delivery delivered")
         
-    def test_bad_credentials(self):
-        credentials = { "email": "joe@joe.com",
-                        "password": "joe"}
-        
-        with pytest.raises(BadCredentialsError):
-            b = BobsledClient(credentials, base_url)
-            
-    def test_share_not_found(self):
+    def test_asserts(self):
+        # Set some things, then get share and see if they have been changed properly
         b = BobsledClient(credentials, base_url)
         
-        with pytest.raises(UnknownObjectError):
-            share = b.get_share("invalid-id")
+        share = b.create_share()
+        
+        name = "testing"
+        description = "a description"
+        share.set_overview(name, description)
+        
+        source_locations = share.get_source_locations()
+        source_id = source_locations[0]["id"]
+        share.set_source_location(source_id)
+        
+        destination_locations = share.get_destination_locations()
+        destination_cloud = "AWS"
+        destination_region = "eu-west-1"
+        share.set_destination_location(destination_cloud, destination_region)
+        
+        folder_contents = share.get_folder_contents()
+        delivery = share.create_delivery(folder_contents)
+        
+        user_email = "test@test.com"
+        share.add_consumer(user_email)
+        
+        share_information = share.get_share_information()
+        
+        assert share.share_id == share_information["share"]["id"]
+        assert name == share_information["share"]["name"]
+        assert description == share_information["share"]["description"]
+        assert source_id == share_information["share"]["sourceLocation"]["id"]
+        assert destination_cloud  == share_information["share"]["destinationLocation"]["cloud"]
+        assert destination_region ==  share_information["share"]["destinationLocation"]["region"]
+        assert delivery.delivery_id == share_information["deliveries"][0]["id"]
+        assert folder_contents == share_information["deliveries"][0]["sharedFiles"]
+        assert user_email == share_information["consumers"][0]["user"]["email"]

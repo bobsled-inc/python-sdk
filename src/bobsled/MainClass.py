@@ -174,10 +174,10 @@ class BobsledClient:
             if r.status_code != 200:
                 handle_errors(r)
             json_locations = r.json()['locations']
-            locations_list_ids = []
-            for location in json_locations:
-                locations_list_ids.append(location['id'])
-            return locations_list_ids
+            # locations_list_ids = []
+            # for location in json_locations:
+            #     locations_list_ids.append(location['id'])
+            return json_locations
 
         def set_source_location(self, location_id):
             """Set the source of the share to location_id
