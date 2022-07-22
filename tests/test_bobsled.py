@@ -70,18 +70,33 @@ class TestClass:
         assert user_email == share_information["consumers"][0]["user"]["email"]
         
     def test_update(self):
+        # testing share update function
         b = BobsledClient(credentials, base_url)
         
         share = b.create_share()
         
         source_locations = share.get_source_locations()
+        
+        name = "python test"
+        description = "a description"
         source_id = source_locations[0]["id"]
+        destination_cloud = "AWS"
+        destination_region = "eu-west-1"
         
         params = {
-            "name": "python test",
-            "description": "a description",
+            "name": name,
+            "description": description,
             "locationId": source_id,
-            "cloud": "AWS",
-            "region": "eu-west-1"
+            "cloud": destination_cloud,
+            "region": destination_region
         }
+        
         share.update(params)
+        
+        share_information = share.get_share_information()
+        assert name == share_information["share"]["name"]
+        assert description == share_information["share"]["description"]
+        assert source_id == share_information["share"]["sourceLocation"]["id"]
+        assert destination_cloud  == share_information["share"]["destinationLocation"]["cloud"]
+        assert destination_region ==  share_information["share"]["destinationLocation"]["region"]
+        

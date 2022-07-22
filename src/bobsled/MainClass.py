@@ -166,10 +166,10 @@ class BobsledClient:
                 handle_errors(r)
 
         def get_source_locations(self):
-            """Retrieves and returns location_ids that can be used in set_source_location
+            """Retrieves and returns locations that can be used in set_source_location
             
             :calls: `GET /shares/{share_id}/source`
-            :return: list of location_ids
+            :return: list of locations 
             """
             
             params = {
