@@ -104,7 +104,7 @@ class BobsledClient:
         def get_share_information(self):
             """Retrieves and returns full information on the share
             
-            :calls: `GET /shares/{share_id}
+            :calls: `GET /shares/{share_id}`
             :return: Dictionary containing full information on the share
             """            
             params = {"_data": "routes/__auth/shares/$shareId"}
@@ -122,7 +122,15 @@ class BobsledClient:
         # WIP
         def update(self, params):
             """Updates share according to parameters provided in params
-                        
+            
+            params = {
+                name,
+                description,
+                locationId, # this is for source location
+                cloud,
+                region
+            }
+            
             :param params: dictionary containing several optional fields
             """            
             
@@ -286,9 +294,6 @@ class BobsledClient:
                     "\'", "\""),  # we have to fit specific format
                 "totalSize": "1000" # placeholder
             }
-            # params = {
-            #     "_data": "routes/__auth/shares/$shareId/delivery"
-            # }
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
                 "/delivery",
