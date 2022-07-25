@@ -128,7 +128,8 @@ class BobsledClient:
                 description,
                 locationId, # this is for source location
                 cloud,
-                region
+                region,
+                consumers
             }
             
             :param params: dictionary containing several optional fields
@@ -140,7 +141,7 @@ class BobsledClient:
                 data=params
             )
             
-            if r.status_code != 200:
+            if r.status_code != 204:
                 handle_errors(r)
 
         def set_overview(self, name, description):
@@ -344,6 +345,29 @@ class BobsledClient:
                 params=params)
             if r.status_code != 200:
                 handle_errors(r)
+                
+        def add_consumers(self, consumer_email_list):
+            """Adds all emails provided to consumers
+
+            :calls: `POST /shares/{share_id}/team`
+            :param consumer_email_list: list of email addresses of the consumers to be added
+            """            
+            data = {
+                "role": "consumer",
+                "actionType": "addUserToShare"
+            }
+            params = {
+                "_data": "routes/__auth/shares/$shareId/team"
+            }
+            for email in consumer_email_list:
+                data["email"] = email
+                r = self.s.post(
+                    self.base_url + "/shares/" + self.share_id +
+                    "/team",
+                    data=data,
+                    params=params)
+                if r.status_code != 200:
+                    handle_errors(r)
 
         # Currently this takes id (not email), which can be unintuitive to the user
         def send_invitation(self, id):
