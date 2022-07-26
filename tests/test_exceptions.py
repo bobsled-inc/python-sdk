@@ -1,5 +1,5 @@
-from bobsled import BobsledClient
-from bobsled import BobsledException, BadCredentialsError, InternalServerError, UnknownObjectError
+from bobsled_sdk import BobsledClient
+from bobsled_sdk import BobsledException, BadCredentialsError, InternalServerError, UnknownObjectError
 import pytest
 
 base_url = "http://127.0.0.1:8080"

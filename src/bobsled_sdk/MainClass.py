@@ -1,6 +1,6 @@
 import requests
 
-from bobsled.utils import flatten, handle_errors
+from bobsled_sdk.utils import flatten, handle_errors
 from . import BobsledException
 
 class BobsledClient:

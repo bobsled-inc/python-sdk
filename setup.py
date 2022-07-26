@@ -2,4 +2,4 @@ from setuptools import setup
 
 setup(name='BobsledTest',
       package_dir={'':'src'},
-      packages=['bobsled'])
+      packages=['bobsled_sdk'])
