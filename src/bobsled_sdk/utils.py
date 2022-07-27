@@ -4,6 +4,7 @@ def handle_errors(response):
     status = response.status_code
     data = response.text
     # figure out right way to extract error message for every error
+    print(status)
     
     if response.status_code == 401 or response.status_code == 403:
         raise BobsledException.BadCredentialsError(status = response.status_code, data = data) # errorType might change?

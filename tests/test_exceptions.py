@@ -10,14 +10,22 @@ credentials = { "email": "danny@bobsled.co",
 
 class TestClass:
     def test_bad_credentials(self):
-        credentials = { "email": "joe@joe.com",
+        bad_credentials = { "email": "joe@joe.com",
                         "password": "joe"}
         
         with pytest.raises(BadCredentialsError):
-            b = BobsledClient(credentials, base_url)
+            b = BobsledClient(bad_credentials, base_url)
             
     def test_share_not_found(self):
         b = BobsledClient(credentials, base_url)
         
         with pytest.raises(UnknownObjectError):
             share = b.get_share("invalid-id")
+            
+    def test_adding_delivery_before_source_set(self):
+        b = BobsledClient(credentials, base_url)
+        
+        share = b.create_share()
+        
+        with pytest.raises(InternalServerError):
+            share.create_delivery(["some file.txt"])
