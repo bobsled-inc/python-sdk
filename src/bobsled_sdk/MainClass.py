@@ -21,8 +21,13 @@ class BobsledClient:
             "_data": "routes/testing/signInWithEmailAndPassword"
         }
         
+        if base_url == "http://127.0.0.1:8080":
+            auth_link = "http://127.0.0.1:3000"
+        else:
+            auth_link = base_url
+        
         r = self.s.post(
-            "http://127.0.0.1:3000" + "/testing/signinwithemailandpassword",
+            auth_link + "/testing/signinwithemailandpassword",
             data=self.credentials,
             params=params)
         if r.status_code != 204:
@@ -428,6 +433,7 @@ class BobsledClient:
             def __repr__(self):
                 return "Delivery(" + self.delivery_id + ")"
 
+            # maybe rename this? 
             def deliver_delivery(self):
                 """Delivers this Delivery
                 
@@ -445,6 +451,27 @@ class BobsledClient:
                     params=params)
                 if not (200 <= r.status_code < 300):
                     handle_errors(r)
+                    
+            def access(self):
+                """Returns the URL to access this delivery
+
+                :calls: `GET
+                :return: URL where deliveries can be accessed
+                """                
+                
+                params = {
+                    "_data": "routes/__auth/shares/$shareId/deliveries/$deliverId/access"
+                }
+                
+                r = self.s.get(
+                    self.base_url + "/shares/" + self.share_id + "/deliveries/" + self.delivery_id + "/access",
+                    params=params)
+                
+                if r.status_code != 200:
+                    handle_errors(r)
+                
+                url = r.json()["delivery"]["url"]
+                return url
 
             def edit_delivery(self):
                 # Unimplemented
