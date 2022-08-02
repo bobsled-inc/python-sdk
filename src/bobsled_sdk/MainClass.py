@@ -93,7 +93,7 @@ class BobsledClient:
             self.s = session
             self.base_url = base_url
             
-            params = {"_data": "routes/__auth/shares/$shareId"}
+            params = {"_data": "routes/__auth/shares/shares.$shareId"}
             
             r = self.s.get(
                 self.base_url + "/shares/" + self.share_id,
@@ -112,7 +112,7 @@ class BobsledClient:
             :calls: `GET /shares/{share_id}`
             :return: Dictionary containing full information on the share
             """            
-            params = {"_data": "routes/__auth/shares/$shareId"}
+            params = {"_data": "routes/__auth/shares/shares.$shareId"}
             
             r = self.s.get(
                 self.base_url + "/shares/" + self.share_id,
@@ -161,7 +161,7 @@ class BobsledClient:
             }
             
             params = {
-                "_data": "routes/shares/$shareId/overview"
+                "_data": "routes/shares/shares.$shareId/overview"
             }
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
@@ -179,7 +179,7 @@ class BobsledClient:
             """
             
             params = {
-                "_data": "routes/__auth/shares/$shareId/source"
+                "_data": "routes/__auth/shares/shares.$shareId/source"
             }
             r = self.s.get(
                 self.base_url + "/shares/" + self.share_id +
@@ -203,7 +203,7 @@ class BobsledClient:
                     "locationId": location_id,
                     }
             params = {
-                "_data": "routes/__auth/shares/$shareId/source"
+                "_data": "routes/__auth/shares/shares.$shareId/source"
             }
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
@@ -221,7 +221,7 @@ class BobsledClient:
             """            
             
             params = {
-                "_data": "routes/__auth/shares/$shareId/destination/new"
+                "_data": "routes/__auth/shares/shares.$shareId/destination/new"
             }
             
             r = self.s.get(
@@ -243,7 +243,7 @@ class BobsledClient:
                
             data = {"cloud": cloud, "region": region}
             params = {
-                "_data": "routes/__auth/shares/$shareId/destination/new"
+                "_data": "routes/__auth/shares/shares.$shareId/destination/new"
             }
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
@@ -253,14 +253,14 @@ class BobsledClient:
             if r.status_code != 204:
                 handle_errors(r)
 
-        def get_folder_contents(self):
+        def get_all_files(self):
             """Returns flattened contents of all files in source location
 
             :calls: `GET /shares/{share_id}/loadCloudData`
             :return: list of file paths
             """            
             params = {
-                "_data": "routes/__auth/shares/$shareId/loadCloudData"
+                "_data": "routes/__auth/shares/shares.$shareId/loadCloudData"
             }
             r = self.s.get(
                 self.base_url + "/shares/" + self.share_id +
@@ -273,6 +273,27 @@ class BobsledClient:
             prefix = self.get_share_information()["share"]["sourceLocation"]["url"]
             
             return flatten(folderContents, prefix)
+        
+        def get_source_contents(self):
+            """Returns folder structure of source location and prefix
+
+            :calls: `GET /shares/{share_id}/loadCloudData`
+            :return: prefix and dictionary representing folder structure at source location
+            """            
+            params = {
+                "_data": "routes/__auth/shares/shares.$shareId/loadCloudData"
+            }
+            r = self.s.get(
+                self.base_url + "/shares/" + self.share_id +
+                "/loadCloudData",
+                params=params)
+            if r.status_code != 200:
+                handle_errors(r)
+            folderContents = r.json()['folderContents']
+            
+            prefix = self.get_share_information()["share"]["sourceLocation"]["url"]
+            
+            return prefix, folderContents
 
         # NEED TO CHANGE THIS
         def get_deliveries(self):
@@ -309,7 +330,15 @@ class BobsledClient:
             if r.status_code != 302:
                 handle_errors(r)
             
-            return self.Delivery(r.text, self.share_id, self.s, self.base_url)
+            return self.Delivery(r.text, self)
+        
+        def get_delivery(self, delivery_id):
+            """Returns the Delivery object given the delivery_id
+
+            :param delivery_id: unique id of the delivery
+            :return: Delivery object
+            """            
+            return self.Delivery(delivery_id, self)
 
         def get_team(self):
             """Returns team members
@@ -318,7 +347,7 @@ class BobsledClient:
             :return: dictionary representing team members
             """            
             params = {
-                "_data": "routes/__auth/shares/$shareId/team"
+                "_data": "routes/__auth/shares/shares.$shareId/team"
             }
             
             r = self.s.get(
@@ -341,7 +370,7 @@ class BobsledClient:
                 "actionType": "addUserToShare"
             }
             params = {
-                "_data": "routes/__auth/shares/$shareId/team"
+                "_data": "routes/__auth/shares/shares.$shareId/team"
             }
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
@@ -362,7 +391,7 @@ class BobsledClient:
                 "actionType": "addUserToShare"
             }
             params = {
-                "_data": "routes/__auth/shares/$shareId/team"
+                "_data": "routes/__auth/shares/shares.$shareId/team"
             }
             for email in consumer_email_list:
                 data["email"] = email
@@ -386,7 +415,7 @@ class BobsledClient:
             }
             
             params = {
-                "_data": "routes/__auth/shares/$shareId/team"
+                "_data": "routes/__auth/shares/shares.$shareId/team"
             }
             
             r = self.s.post(
@@ -408,7 +437,7 @@ class BobsledClient:
                     "\'", "\"")
             }
             params = {
-                "_data": "routes/__auth/shares/$shareId/destination/edit"
+                "_data": "routes/__auth/shares/shares.$shareId/destination/edit"
             }
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
@@ -421,11 +450,12 @@ class BobsledClient:
             """
             This class represents a delivery, and should only be acquired by the user through calling get_delivery or create_delivery on a Share
             """
-            def __init__(self, delivery_id, share_id, session, base_url):
+            def __init__(self, delivery_id, share):
                 self.delivery_id = delivery_id
-                self.share_id = share_id
-                self.s = session
-                self.base_url = base_url
+                self.share = share
+                self.share_id = share.share_id
+                self.s = share.session
+                self.base_url = share.base_url
 
             def __str__(self):
                 return self.__repr__()
@@ -443,7 +473,7 @@ class BobsledClient:
                     "deliverDeliveryId": self.delivery_id
                 }
                 params = {
-                    "_data": "routes/__auth/shares/$shareId"
+                    "_data": "routes/__auth/shares/shares.$shareId"
                 }
                 r = self.s.post(
                     self.base_url + "/shares/" + self.share_id,
@@ -451,7 +481,21 @@ class BobsledClient:
                     params=params)
                 if not (200 <= r.status_code < 300):
                     handle_errors(r)
+            
+            # This is really inefficient right now, is there a better way to do this?
+            def status(self):
+                """Returns the current status of the delivery
+
+                :return: a string representing the current state of the delivery: "published", "delivering", "delivered", "invalid"
+                """                
+                share_info = self.share.get_share_information()
+                for delivery in share_info["deliveries"]:
+                    if delivery["id"] == self.delivery_id:
+                        return delivery["state"]
+                return "invalid"
+                
                     
+            # might have to change params for $deliveryId?
             def access(self):
                 """Returns the URL to access this delivery
 
@@ -460,7 +504,7 @@ class BobsledClient:
                 """                
                 
                 params = {
-                    "_data": "routes/__auth/shares/$shareId/deliveries/$deliverId/access"
+                    "_data": "routes/__auth/shares/shares.$shareId/deliveries/$deliveryId/access"
                 }
                 
                 r = self.s.get(

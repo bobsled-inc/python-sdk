@@ -26,11 +26,18 @@ class TestClass:
         share.set_destination_location("AWS", "eu-west-1")
         
         # Create Delivery
-        folder_contents = share.get_folder_contents()
+        folder_contents = share.get_all_files()()
         delivery = share.create_delivery(folder_contents)
+        
+        # Check Delivery Status
+        print(delivery.status())
         
         # Delivering the Delivery
         delivery.deliver_delivery()
+        
+        # Access the delivery
+        url = delivery.access()
+        print(urL)
         
     def test_asserts(self):
         # Set some things, then get share and see if they have been changed properly
@@ -51,7 +58,7 @@ class TestClass:
         destination_region = "eu-west-1"
         share.set_destination_location(destination_cloud, destination_region)
         
-        folder_contents = share.get_folder_contents()
+        folder_contents = share.get_all_files()()
         delivery = share.create_delivery(folder_contents)
         
         user_email = "test@test.com"
