@@ -8,7 +8,7 @@ class BobsledClient:
     This is the main class you instantiate to access Bobsled. 
     """
     
-    def __init__(self, credentials, base_url = "http://127.0.0.1:8080"):
+    def __init__(self, credentials, base_url = "http://127.0.0.1:3000"):
         self.credentials = credentials
         self.base_url = base_url
         self.s = requests.Session()
@@ -40,7 +40,7 @@ class BobsledClient:
         :return: a list of share_ids
         """        
         params = {
-            "_data": "routes/__auth/shares/index"
+            "_data": "routes/__auth/shares"
         }
         
         r = self.s.get(
@@ -70,8 +70,7 @@ class BobsledClient:
         :return: the Share object representing the share that was just created
         """        
         params = {
-            "index" : "",  # We need this for some reason
-            "_data": "routes/__auth/shares/index"
+            "_data": "routes/__auth/shares"
         }
         
         r = self.s.post(self.base_url +
@@ -93,7 +92,7 @@ class BobsledClient:
             self.s = session
             self.base_url = base_url
             
-            params = {"_data": "routes/__auth/shares/shares.$shareId"}
+            params = {"_data": "routes/__auth/shares.$shareId"}
             
             r = self.s.get(
                 self.base_url + "/shares/" + self.share_id,
@@ -112,7 +111,7 @@ class BobsledClient:
             :calls: `GET /shares/{share_id}`
             :return: Dictionary containing full information on the share
             """            
-            params = {"_data": "routes/__auth/shares/shares.$shareId"}
+            params = {"_data": "routes/__auth/shares.$shareId"}
             
             r = self.s.get(
                 self.base_url + "/shares/" + self.share_id,
@@ -123,6 +122,32 @@ class BobsledClient:
                 handle_errors(r)
             
             return r.json()
+        
+        def archive(self):
+            """Archives current share
+            """            
+            
+            params = {
+                "_data": "routes/__auth/shares.$shareId"
+            }
+            
+            data = {
+                "actionType": "archive"
+            }
+            
+            r = self.s.post(
+                self.base_url + "/shares/" + self.share_id,
+                params=params,
+                data=data
+            )
+            
+            if r.status_code != 204:
+                handle_errors(r)
+                
+        # Unimplemented
+        def restore(self):
+            pass
+            
         
         # WIP
         def update(self, params):
@@ -161,7 +186,7 @@ class BobsledClient:
             }
             
             params = {
-                "_data": "routes/shares/shares.$shareId/overview"
+                "_data": "routes/__auth/shares.$shareId/overview"
             }
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
@@ -179,7 +204,7 @@ class BobsledClient:
             """
             
             params = {
-                "_data": "routes/__auth/shares/shares.$shareId/source"
+                "_data": "routes/__auth/shares.$shareId/source"
             }
             r = self.s.get(
                 self.base_url + "/shares/" + self.share_id +
@@ -203,7 +228,7 @@ class BobsledClient:
                     "locationId": location_id,
                     }
             params = {
-                "_data": "routes/__auth/shares/shares.$shareId/source"
+                "_data": "routes/__auth/shares.$shareId/source"
             }
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
@@ -221,7 +246,7 @@ class BobsledClient:
             """            
             
             params = {
-                "_data": "routes/__auth/shares/shares.$shareId/destination/new"
+                "_data": "routes/__auth/shares.$shareId/destination/new"
             }
             
             r = self.s.get(
@@ -243,7 +268,7 @@ class BobsledClient:
                
             data = {"cloud": cloud, "region": region}
             params = {
-                "_data": "routes/__auth/shares/shares.$shareId/destination/new"
+                "_data": "routes/__auth/shares.$shareId/destination/new"
             }
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
@@ -260,7 +285,7 @@ class BobsledClient:
             :return: list of file paths
             """            
             params = {
-                "_data": "routes/__auth/shares/shares.$shareId/loadCloudData"
+                "_data": "routes/__auth/shares.$shareId/loadCloudData"
             }
             r = self.s.get(
                 self.base_url + "/shares/" + self.share_id +
@@ -281,7 +306,7 @@ class BobsledClient:
             :return: prefix and dictionary representing folder structure at source location
             """            
             params = {
-                "_data": "routes/__auth/shares/shares.$shareId/loadCloudData"
+                "_data": "routes/__auth/shares.$shareId/loadCloudData"
             }
             r = self.s.get(
                 self.base_url + "/shares/" + self.share_id +
@@ -347,7 +372,7 @@ class BobsledClient:
             :return: dictionary representing team members
             """            
             params = {
-                "_data": "routes/__auth/shares/shares.$shareId/team"
+                "_data": "routes/__auth/shares.$shareId/team"
             }
             
             r = self.s.get(
@@ -370,7 +395,7 @@ class BobsledClient:
                 "actionType": "addUserToShare"
             }
             params = {
-                "_data": "routes/__auth/shares/shares.$shareId/team"
+                "_data": "routes/__auth/shares.$shareId/team"
             }
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
@@ -391,7 +416,7 @@ class BobsledClient:
                 "actionType": "addUserToShare"
             }
             params = {
-                "_data": "routes/__auth/shares/shares.$shareId/team"
+                "_data": "routes/__auth/shares.$shareId/team"
             }
             for email in consumer_email_list:
                 data["email"] = email
@@ -415,7 +440,7 @@ class BobsledClient:
             }
             
             params = {
-                "_data": "routes/__auth/shares/shares.$shareId/team"
+                "_data": "routes/__auth/shares.$shareId/team"
             }
             
             r = self.s.post(
@@ -437,7 +462,7 @@ class BobsledClient:
                     "\'", "\"")
             }
             params = {
-                "_data": "routes/__auth/shares/shares.$shareId/destination/edit"
+                "_data": "routes/__auth/shares.$shareId/destination/edit"
             }
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
@@ -454,7 +479,7 @@ class BobsledClient:
                 self.delivery_id = delivery_id
                 self.share = share
                 self.share_id = share.share_id
-                self.s = share.session
+                self.s = share.s
                 self.base_url = share.base_url
 
             def __str__(self):
@@ -473,7 +498,7 @@ class BobsledClient:
                     "deliverDeliveryId": self.delivery_id
                 }
                 params = {
-                    "_data": "routes/__auth/shares/shares.$shareId"
+                    "_data": "routes/__auth/shares.$shareId"
                 }
                 r = self.s.post(
                     self.base_url + "/shares/" + self.share_id,
@@ -504,7 +529,7 @@ class BobsledClient:
                 """                
                 
                 params = {
-                    "_data": "routes/__auth/shares/shares.$shareId/deliveries/$deliveryId/access"
+                    "_data": "routes/__auth/shares.$shareId/deliveries/$deliveryId/access"
                 }
                 
                 r = self.s.get(

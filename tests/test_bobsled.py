@@ -2,7 +2,7 @@ from bobsled_sdk import BobsledClient
 from bobsled_sdk import BobsledException, BadCredentialsError, InternalServerError, UnknownObjectError
 import pytest
 
-base_url = "http://127.0.0.1:8080"
+base_url = "http://127.0.0.1:3000"
 
 credentials = { "email": "danny@bobsled.co",
         "password": "bobsledding_it"
@@ -26,7 +26,7 @@ class TestClass:
         share.set_destination_location("AWS", "eu-west-1")
         
         # Create Delivery
-        folder_contents = share.get_all_files()()
+        folder_contents = share.get_all_files()
         delivery = share.create_delivery(folder_contents)
         
         # Check Delivery Status
@@ -38,6 +38,8 @@ class TestClass:
         # Access the delivery
         url = delivery.access()
         print(urL)
+        
+        share.archive()
         
     def test_asserts(self):
         # Set some things, then get share and see if they have been changed properly
@@ -58,7 +60,7 @@ class TestClass:
         destination_region = "eu-west-1"
         share.set_destination_location(destination_cloud, destination_region)
         
-        folder_contents = share.get_all_files()()
+        folder_contents = share.get_all_files()
         delivery = share.create_delivery(folder_contents)
         
         user_email = "test@test.com"
@@ -75,6 +77,8 @@ class TestClass:
         assert delivery.delivery_id == share_information["deliveries"][0]["id"]
         assert folder_contents == share_information["deliveries"][0]["sharedFiles"]
         assert user_email == share_information["consumers"][0]["user"]["email"]
+        
+        share.archive()
         
     def test_update(self):
         # testing share update function
@@ -106,4 +110,6 @@ class TestClass:
         assert source_id == share_information["share"]["sourceLocation"]["id"]
         assert destination_cloud  == share_information["share"]["destinationLocation"]["cloud"]
         assert destination_region ==  share_information["share"]["destinationLocation"]["region"]
+        
+        share.archive()
         
