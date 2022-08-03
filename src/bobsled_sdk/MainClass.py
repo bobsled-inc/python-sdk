@@ -144,10 +144,19 @@ class BobsledClient:
             if r.status_code != 204:
                 handle_errors(r)
                 
-        # Unimplemented
         def restore(self):
-            pass
+            """Restores this archived share
+            """            
+            params = {
+                "_data": "routes/__auth/shares.archived.$archivedShareId"
+            }
+            r = self.s.post(
+                self.base_url + "/shares/archived/" + self.share_id,
+                params = params
+            )
             
+            if r.status_code != 204:
+                handle_errors(r)
         
         # WIP
         def update(self, params):
