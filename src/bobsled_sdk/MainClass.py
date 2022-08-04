@@ -18,16 +18,11 @@ class BobsledClient:
         self.s.headers.update(headers)
         
         params = {
-            "_data": "routes/testing/signInWithEmailAndPassword"
+            "_data": "routes/__unauth/[signin-with-password]"
         }
         
-        if base_url == "http://127.0.0.1:8080":
-            auth_link = "http://127.0.0.1:3000"
-        else:
-            auth_link = base_url
-        
         r = self.s.post(
-            auth_link + "/testing/signinwithemailandpassword",
+            auth_link + "/signin-with-password",
             data=self.credentials,
             params=params)
         if r.status_code != 204:
