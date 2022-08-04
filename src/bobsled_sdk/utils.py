@@ -15,7 +15,7 @@ def handle_errors(response):
     else:
         raise BobsledException(status = response.status_code, data = data)
 
-def flatten(contents, prefix):
+def flatten(contents, prefix, time=0):
     """Helper function to flatten contents of source bucket
 
     :param contents: dictionary representing source bucket
@@ -26,7 +26,9 @@ def flatten(contents, prefix):
 
     for obj in contents:
         if obj["content"] is None:
-          result.append(prefix + obj["id"])
+            timestamp = obj["lastModified"] // 1000
+            if timestamp >= time:
+                result.append(prefix + obj["id"])
         else:
             result.extend(flatten(obj["content"], prefix))
 

@@ -22,7 +22,7 @@ class BobsledClient:
         }
         
         r = self.s.post(
-            auth_link + "/signin-with-password",
+            base_url + "/signin-with-password",
             data=self.credentials,
             params=params)
         if r.status_code != 204:
@@ -282,10 +282,11 @@ class BobsledClient:
             if r.status_code != 204:
                 handle_errors(r)
 
-        def get_all_files(self):
-            """Returns flattened contents of all files in source location
+        def get_all_files(self, time=0):
+            """Returns flattened contents of all files that were last modified after time in source location
 
             :calls: `GET /shares/{share_id}/loadCloudData`
+            :param time: UNIX timestamp in seconds
             :return: list of file paths
             """            
             params = {
@@ -301,7 +302,7 @@ class BobsledClient:
             
             prefix = self.get_share_information()["share"]["sourceLocation"]["url"]
             
-            return flatten(folderContents, prefix)
+            return flatten(folderContents, prefix, time)
         
         def get_source_contents(self):
             """Returns folder structure of source location and prefix
@@ -324,19 +325,15 @@ class BobsledClient:
             
             return prefix, folderContents
 
-        # NEED TO CHANGE THIS
         def get_deliveries(self):
             """Returns the list of deliveries of this share
 
-            :calls: `GET /shares/{share_id}/driver`
+            :calls: `GET /shares/{share_id}`
             :return: list of deliveries
             """            
-            r = self.s.get(self.base_url + "/shares/" + self.share_id +
-                "/driver")
-            delivery_list = []
-            for obj in r.json():
-                delivery_list.append(self.Delivery(obj["id"], self.share_id, self.s, self.base_url))
-            return delivery_list
+            
+            share_info = self.get_share_information()
+            return share_info["deliveries"]
 
         def create_delivery(self, selection):
             """Creates and returns a Delivery object given selection of file paths
