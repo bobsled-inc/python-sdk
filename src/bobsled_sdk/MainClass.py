@@ -217,9 +217,6 @@ class BobsledClient:
             if r.status_code != 200:
                 handle_errors(r)
             json_locations = r.json()['locations']
-            # locations_list_ids = []
-            # for location in json_locations:
-            #     locations_list_ids.append(location['id'])
             return json_locations
 
         def set_source_location(self, location_id):
@@ -335,7 +332,7 @@ class BobsledClient:
             share_info = self.get_share_information()
             return share_info["deliveries"]
 
-        def create_delivery(self, selection):
+        def create_delivery(self, selection, size):
             """Creates and returns a Delivery object given selection of file paths
 
             :calls: `POST /shares/{share_id}/delivery`
@@ -345,7 +342,7 @@ class BobsledClient:
             data = {
                 "sharedFiles": selection.__str__().replace(" ", "").replace(
                     "\'", "\""),  # we have to fit specific format
-                "totalSize": "1000" # placeholder
+                "totalSize": size # placeholder
             }
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
@@ -496,7 +493,8 @@ class BobsledClient:
                 :calls: `POST /shares/{share_id}`
                 """                
                 data = {
-                    "deliverDeliveryId": self.delivery_id
+                    "deliverDeliveryId": self.delivery_id,
+                    "actionType": "deliverDelivery"
                 }
                 params = {
                     "_data": "routes/__auth/shares.$shareId"

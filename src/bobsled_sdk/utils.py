@@ -23,14 +23,15 @@ def flatten(contents, prefix, time=0):
     :return: list of complete file paths for all files in source bucket
     """  
     result = []
-
+    total_size = 0
     for obj in contents:
         if obj["content"] is None:
             timestamp = obj["lastModified"] // 1000
             if timestamp >= time:
+                total_size += obj["size"]
                 result.append(prefix + obj["id"])
         else:
             result.extend(flatten(obj["content"], prefix))
 
-    return result
+    return result, total_size
   
