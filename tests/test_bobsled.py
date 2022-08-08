@@ -2,7 +2,7 @@ from bobsled_sdk import BobsledClient
 from bobsled_sdk import BobsledException, BadCredentialsError, InternalServerError, UnknownObjectError
 import pytest
 
-base_url = "http://127.0.0.1:3000"
+base_url = "http://127.0.0.1:43741"
 
 credentials = { "email": "danny@bobsled.co",
         "password": "bobsledding_it"
@@ -16,6 +16,7 @@ class TestClass:
         
         # Get share object
         share = b.create_share()
+        share.set_overview("Delivery test", "Delivery test")
         
         # Set share source location
         source_locations = share.get_source_locations()
@@ -26,8 +27,8 @@ class TestClass:
         share.set_destination_location("AWS", "eu-west-1")
         
         # Create Delivery
-        folder_contents = share.get_all_files()
-        delivery = share.create_delivery(folder_contents)
+        folder_contents, size = ["s3://rhizo-your-bucket-name/folder/folder-2/folder-3/folder-4/again-file.csv","s3://rhizo-your-bucket-name/folder/other-file.csv","s3://rhizo-your-bucket-name/foo/bar/foo/bar/foo/bar.txt"], 137035
+        delivery = share.create_delivery(folder_contents, size)
         
         # Check Delivery Status
         print(delivery.status())
@@ -37,9 +38,7 @@ class TestClass:
         
         # Access the delivery
         url = delivery.access()
-        print(urL)
-        
-        share.archive()
+        print(url)
         
     def test_asserts(self):
         # Set some things, then get share and see if they have been changed properly
@@ -60,8 +59,8 @@ class TestClass:
         destination_region = "eu-west-1"
         share.set_destination_location(destination_cloud, destination_region)
         
-        folder_contents = share.get_all_files()
-        delivery = share.create_delivery(folder_contents)
+        folder_contents, size = share.get_all_files()
+        delivery = share.create_delivery(folder_contents, size)
         
         user_email = "test@test.com"
         share.add_consumer(user_email)
@@ -77,8 +76,6 @@ class TestClass:
         assert delivery.delivery_id == share_information["deliveries"][0]["id"]
         assert folder_contents == share_information["deliveries"][0]["sharedFiles"]
         assert user_email == share_information["consumers"][0]["user"]["email"]
-        
-        share.archive()
         
     def test_update(self):
         # testing share update function

@@ -13,7 +13,7 @@ def handle_errors(response):
     elif response.status_code == 500:
         raise BobsledException.InternalServerError(status = response.status_code, data = data)
     else:
-        raise BobsledException(status = response.status_code, data = data)
+        raise BobsledException.BobsledException(status = response.status_code, data = data)
 
 def flatten(contents, prefix, time=0):
     """Helper function to flatten contents of source bucket
@@ -31,7 +31,9 @@ def flatten(contents, prefix, time=0):
                 total_size += obj["size"]
                 result.append(prefix + obj["id"])
         else:
-            result.extend(flatten(obj["content"], prefix))
+            files, size = flatten(obj["content"], prefix, time)
+            result.extend(files)
+            total_size += size
 
     return result, total_size
   

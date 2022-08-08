@@ -18,7 +18,7 @@ class BobsledClient:
         self.s.headers.update(headers)
         
         params = {
-            "_data": "routes/__unauth/[signin-with-password]"
+            "_data": "routes/__unauth/signin-with-password"
         }
         
         r = self.s.post(
@@ -332,7 +332,7 @@ class BobsledClient:
             share_info = self.get_share_information()
             return share_info["deliveries"]
 
-        def create_delivery(self, selection, size):
+        def create_delivery(self, selection, size = 1000):
             """Creates and returns a Delivery object given selection of file paths
 
             :calls: `POST /shares/{share_id}/delivery`
@@ -344,10 +344,16 @@ class BobsledClient:
                     "\'", "\""),  # we have to fit specific format
                 "totalSize": size # placeholder
             }
+            
+            # params = {
+            #     "_data": "routes/__auth/shares.$shareId/delivery"
+            # }
+            
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
                 "/delivery",
                 data=data,
+            #    params=params,
                 allow_redirects=False)
             
             if r.status_code != 302:
