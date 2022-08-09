@@ -340,7 +340,7 @@ class BobsledClient:
             """            
 
             data = {
-                "sharedFiles": selection.__str__().replace(" ", "").replace(
+                "sharedFiles": selection.__str__().replace("\', \'", "\',\'").replace(
                     "\'", "\""),  # we have to fit specific format
                 "totalSize": size # placeholder
             }
