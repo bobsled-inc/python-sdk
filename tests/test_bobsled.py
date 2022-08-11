@@ -2,7 +2,7 @@ from bobsled_sdk import BobsledClient
 from bobsled_sdk import BobsledException, BadCredentialsError, InternalServerError, UnknownObjectError
 import pytest
 
-base_url = "http://127.0.0.1:43741"
+base_url = "http://127.0.0.1:3000"
 
 credentials = { "email": "danny@bobsled.co",
         "password": "bobsledding_it"

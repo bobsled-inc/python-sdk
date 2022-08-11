@@ -341,7 +341,7 @@ class BobsledClient:
 
             data = {
                 "sharedFiles": selection.__str__().replace("\', \'", "\',\'").replace(
-                    "\'", "\""),  # we have to fit specific format
+                    "\'", "\""),# .replace(" ", "+"),  # we have to fit specific format
                 "totalSize": size # placeholder
             }
             
@@ -512,7 +512,6 @@ class BobsledClient:
                 if not (200 <= r.status_code < 300):
                     handle_errors(r)
             
-            # This is really inefficient right now, is there a better way to do this?
             def status(self):
                 """Returns the current status of the delivery
 
@@ -524,8 +523,6 @@ class BobsledClient:
                         return delivery["state"]
                 return "invalid"
                 
-                    
-            # might have to change params for $deliveryId?
             def access(self):
                 """Returns the URL to access this delivery
 
