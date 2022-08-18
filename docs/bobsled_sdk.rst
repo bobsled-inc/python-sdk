@@ -28,10 +28,10 @@ bobsled.BobsledException module
    :undoc-members:
    :show-inheritance:
 
-bobsled.utils module
---------------------
+.. bobsled.utils module
+.. --------------------
 
-.. automodule:: bobsled_sdk.utils
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. .. automodule:: bobsled_sdk.utils
+..    :members:
+..    :undoc-members:
+..    :show-inheritance:

@@ -29,3 +29,12 @@ class TestClass:
         
         with pytest.raises(InternalServerError):
             share.create_delivery(["some file.txt"], 100)
+            
+    def test_invalid_arns(self):
+        b = BobsledClient(credentials, base_url)
+        
+        share = b.create_share()
+        
+        with pytest.raises(InternalServerError): # raises 422
+            share.set_destination_location("AWS", "eu-west-1")
+            share.add_access_identifiers(["baaaaad-arn", "this-one-too"])

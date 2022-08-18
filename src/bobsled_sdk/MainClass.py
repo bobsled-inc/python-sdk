@@ -144,7 +144,7 @@ class BobsledClient:
         def restore(self):
             """Restores this archived share
             
-            :calls; `POST /shares/{share_id}`
+            :calls: `POST /shares/{share_id}`
             """            
             params = {
                 "_data": "routes/__auth/shares.archived.$archivedShareId"
@@ -172,7 +172,7 @@ class BobsledClient:
             
             :param params: dictionary containing several optional fields
             """            
-            
+        
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id + 
                 "/driver",
@@ -547,7 +547,7 @@ class BobsledClient:
             def access(self):
                 """Returns the URL to access this delivery
 
-                :calls: `GET
+                :calls: `GET /shares/{share_id}/deliveries/{delivery_id}/access`
                 :return: URL where deliveries can be accessed
                 """                
                 
