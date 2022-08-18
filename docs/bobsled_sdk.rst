@@ -1,5 +1,5 @@
-bobsled package
-===============
+bobsled_sdk package
+====================
 
 Submodules
 ----------
@@ -7,7 +7,7 @@ Submodules
 Module contents
 ---------------
 
-.. automodule:: bobsled
+.. automodule:: bobsled_sdk
    :members:
    :undoc-members:
    :show-inheritance:
@@ -15,7 +15,7 @@ Module contents
 bobsled.MainClass module
 ------------------------
 
-.. automodule:: bobsled.MainClass
+.. automodule:: bobsled_sdk.MainClass
    :members:
    :undoc-members:
    :show-inheritance:
@@ -23,7 +23,7 @@ bobsled.MainClass module
 bobsled.BobsledException module
 -------------------------------
 
-.. automodule:: bobsled.BobsledException
+.. automodule:: bobsled_sdk.BobsledException
    :members:
    :undoc-members:
    :show-inheritance:
@@ -31,7 +31,7 @@ bobsled.BobsledException module
 bobsled.utils module
 --------------------
 
-.. automodule:: bobsled.utils
+.. automodule:: bobsled_sdk.utils
    :members:
    :undoc-members:
    :show-inheritance:

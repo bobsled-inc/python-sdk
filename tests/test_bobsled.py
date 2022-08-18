@@ -2,7 +2,7 @@ from bobsled_sdk import BobsledClient
 from bobsled_sdk import BobsledException, BadCredentialsError, InternalServerError, UnknownObjectError
 import pytest
 
-base_url = "http://127.0.0.1:3000"
+base_url = "https://staging-rhizo-co-remix-deploy-remix-app-64ohelifva-ey.a.run.app/"
 
 credentials = { "email": "danny@bobsled.co",
         "password": "bobsledding_it"
@@ -110,3 +110,21 @@ class TestClass:
         
         share.archive()
         
+    def test_access_identifiers(self):
+        
+        b = BobsledClient(credentials, base_url)
+        share = b.create_share()
+        
+        share.set_overview("arn test", "python driver")
+        
+        source_locations = share.get_source_locations()
+        source_id = source_locations[0]["id"]
+        share.set_source_location(source_id)
+        
+        destination_locations = share.get_destination_locations()
+        destination_cloud = "AWS"
+        destination_region = "eu-west-1"
+        share.set_destination_location(destination_cloud, destination_region)
+        
+        ARN_list = ["arn:aws:iam::123678912012:user/*", "arn:aws:iam::123698912012:user/*", "arn:aws:iam::123699912012:user/*"]
+        share.add_access_identifiers(ARN_list)

@@ -9,7 +9,7 @@ Welcome to Bobsled Python SDK's documentation!
 .. toctree::
    :maxdepth: 2
 
-   bobsled
+   bobsled_sdk
 
 
 Indices and tables

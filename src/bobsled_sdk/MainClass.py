@@ -120,6 +120,8 @@ class BobsledClient:
         
         def archive(self):
             """Archives current share
+            
+            :calls; `POST /shares/{share_id}`
             """            
             
             params = {
@@ -141,6 +143,8 @@ class BobsledClient:
                 
         def restore(self):
             """Restores this archived share
+            
+            :calls; `POST /shares/{share_id}`
             """            
             params = {
                 "_data": "routes/__auth/shares.archived.$archivedShareId"
@@ -345,15 +349,10 @@ class BobsledClient:
                 "totalSize": size # placeholder
             }
             
-            # params = {
-            #     "_data": "routes/__auth/shares.$shareId/delivery"
-            # }
-            
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
                 "/delivery",
                 data=data,
-            #    params=params,
                 allow_redirects=False)
             
             if r.status_code != 302:
@@ -456,14 +455,13 @@ class BobsledClient:
             if r.status_code != 200:
                 handle_errors(r)
 
-        def edit_access_identifiers(self, ARN_list):
+        def add_access_identifiers(self, ARN_list):
             """Edit access identifiers of this share
 
             :param ARN_list: list of access identifiers for this share
             """            
             data = {
-                "accessIdentifiers": ARN_list.__str__().replace(" ", "").replace(
-                    "\'", "\"")
+                "accessIdentifiers": ARN_list
             }
             params = {
                 "_data": "routes/__auth/shares.$shareId/destination/edit"
@@ -472,7 +470,30 @@ class BobsledClient:
                 self.base_url + "/shares/" + self.share_id +
                 "/destination/edit",
                 data=data)
-            if r.status_code != 204:
+            if r.status_code != 204 and r.status_code != 200:
+                handle_errors(r)
+                
+        def remove_access_identifiers(self, ARN_list):
+            """Remove access identifiers of this share
+
+            :param ARN_list: list of access identifiers for this share
+            """            
+            
+            # we want to change ARNs into their ids
+            ARN_id_list = []
+            
+            
+            data = {
+                "accessIdentifiers": ARN_list
+            }
+            params = {
+                "_data": "routes/__auth/shares.$shareId/destination/edit"
+            }
+            r = self.s.post(
+                self.base_url + "/shares/" + self.share_id +
+                "/destination/edit",
+                data=data)
+            if r.status_code != 204 and r.status_code != 200:
                 handle_errors(r)
 
         class Delivery:
