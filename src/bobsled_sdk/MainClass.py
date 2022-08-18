@@ -336,7 +336,7 @@ class BobsledClient:
             share_info = self.get_share_information()
             return share_info["deliveries"]
 
-        def create_delivery(self, selection, size = 1000):
+        def create_delivery(self, selection, size = 1000, overwriteMode = True):
             """Creates and returns a Delivery object given selection of file paths
 
             :calls: `POST /shares/{share_id}/delivery`
@@ -346,7 +346,8 @@ class BobsledClient:
             data = {
                 "sharedFiles": selection.__str__().replace("\', \'", "\',\'").replace(
                     "\'", "\""),# .replace(" ", "+"),  # we have to fit specific format
-                "totalSize": size # placeholder
+                "totalSize": size, # placeholder
+                "overwriteMode": str(overwriteMode).lower()
             }
             
             r = self.s.post(
