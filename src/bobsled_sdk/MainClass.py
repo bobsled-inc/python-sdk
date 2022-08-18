@@ -10,7 +10,7 @@ class BobsledClient:
     
     def __init__(self, credentials, base_url = "http://127.0.0.1:3000"):
         self.credentials = credentials
-        self.base_url = base_url
+        self.base_url = base_url.strip("/")
         self.s = requests.Session()
         headers = {
             "User-Agent": "Bobsled-Python-SDK/Python",
