@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bobsled_sdk.MainClass &mdash; Bobsled Python SDK 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Bobsled Python SDK
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../bobsled_sdk.html">bobsled_sdk package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Bobsled Python SDK</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>bobsled_sdk.MainClass</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for bobsled_sdk.MainClass</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="kn">from</span> <span class="nn">bobsled_sdk.utils</span> <span class="kn">import</span> <span class="n">flatten</span><span class="p">,</span> <span class="n">handle_errors</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">BobsledException</span>
+
+<div class="viewcode-block" id="BobsledClient"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient">[docs]</a><span class="k">class</span> <span class="nc">BobsledClient</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This is the main class you instantiate to access Bobsled. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">base_url</span> <span class="o">=</span> <span class="s2">&quot;http://127.0.0.1:3000&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">credentials</span> <span class="o">=</span> <span class="n">credentials</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">=</span> <span class="n">base_url</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Bobsled-Python-SDK/Python&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">headers</span><span class="p">)</span>
+        
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__unauth/signin-with-password&quot;</span>
+        <span class="p">}</span>
+        
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/signin-with-password&quot;</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">credentials</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">204</span><span class="p">:</span>
+            <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BobsledClient.list_shares"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.list_shares">[docs]</a>    <span class="k">def</span> <span class="nf">list_shares</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a list of share_ids that can be used with get_share</span>
+
+<span class="sd">        :calls: `GET /shares`</span>
+<span class="sd">        :return: a list of share_ids</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares&quot;</span>
+        <span class="p">}</span>
+        
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span><span class="s2">&quot;/shares&quot;</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="n">params</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+            <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="n">json_shares</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;shares&#39;</span><span class="p">]</span>
+        <span class="n">share_list_ids</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">share</span> <span class="ow">in</span> <span class="n">json_shares</span><span class="p">:</span>
+            <span class="n">share_list_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">share</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">share_list_ids</span></div>
+
+<div class="viewcode-block" id="BobsledClient.get_share"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.get_share">[docs]</a>    <span class="k">def</span> <span class="nf">get_share</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">share_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the Share with given share_id</span>
+
+<span class="sd">        :param share_id: unique id of share</span>
+<span class="sd">        :return: Share object</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Share</span><span class="p">(</span><span class="n">share_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BobsledClient.create_share"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.create_share">[docs]</a>    <span class="k">def</span> <span class="nf">create_share</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates a new share. This only works if authenticated as a provider</span>
+
+<span class="sd">        :calls: `POST /shares`</span>
+<span class="sd">        :return: the Share object representing the share that was just created</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares&quot;</span>
+        <span class="p">}</span>
+        
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span>
+                        <span class="s2">&quot;/shares&quot;</span><span class="p">,</span>
+                        <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">204</span><span class="p">:</span>
+            <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="n">header_str</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;x-remix-redirect&quot;</span><span class="p">]</span>
+        <span class="n">share_id</span> <span class="o">=</span> <span class="n">header_str</span><span class="p">[</span><span class="mi">8</span><span class="p">:]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Share</span><span class="p">(</span><span class="n">share_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BobsledClient.Share"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.Share">[docs]</a>    <span class="k">class</span> <span class="nc">Share</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This class represents a share, and should only be acquired by the user through calling get_share or create_share on a BobsledClient</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">share_id</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">base_url</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">=</span> <span class="n">share_id</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">session</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">=</span> <span class="n">base_url</span>
+            
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares.$shareId&quot;</span><span class="p">}</span>
+            
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span><span class="p">,</span>
+                <span class="n">params</span><span class="o">=</span><span class="n">params</span>
+            <span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BobsledClient.Share.get_id"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.Share.get_id">[docs]</a>        <span class="k">def</span> <span class="nf">get_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span></div>
+        
+<div class="viewcode-block" id="BobsledClient.Share.get_share_information"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.Share.get_share_information">[docs]</a>        <span class="k">def</span> <span class="nf">get_share_information</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Retrieves and returns full information on the share</span>
+<span class="sd">            </span>
+<span class="sd">            :calls: `GET /shares/{share_id}`</span>
+<span class="sd">            :return: Dictionary containing full information on the share</span>
+<span class="sd">            &quot;&quot;&quot;</span>            
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares.$shareId&quot;</span><span class="p">}</span>
+            
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span><span class="p">,</span>
+                <span class="n">params</span><span class="o">=</span><span class="n">params</span>
+            <span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+            
+            <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
+        
+<div class="viewcode-block" id="BobsledClient.Share.archive"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.Share.archive">[docs]</a>        <span class="k">def</span> <span class="nf">archive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Archives current share</span>
+<span class="sd">            </span>
+<span class="sd">            :calls; `POST /shares/{share_id}`</span>
+<span class="sd">            &quot;&quot;&quot;</span>            
+            
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares.$shareId&quot;</span>
+            <span class="p">}</span>
+            
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;actionType&quot;</span><span class="p">:</span> <span class="s2">&quot;archive&quot;</span>
+            <span class="p">}</span>
+            
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span><span class="p">,</span>
+                <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+                <span class="n">data</span><span class="o">=</span><span class="n">data</span>
+            <span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">204</span><span class="p">:</span>
+                <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
+                
+<div class="viewcode-block" id="BobsledClient.Share.restore"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.Share.restore">[docs]</a>        <span class="k">def</span> <span class="nf">restore</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Restores this archived share</span>
+<span class="sd">            </span>
+<span class="sd">            :calls: `POST /shares/{share_id}`</span>
+<span class="sd">            &quot;&quot;&quot;</span>            
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares.archived.$archivedShareId&quot;</span>
+            <span class="p">}</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/archived/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span><span class="p">,</span>
+                <span class="n">params</span> <span class="o">=</span> <span class="n">params</span>
+            <span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">204</span><span class="p">:</span>
+                <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
+        
+        <span class="c1"># WIP</span>
+<div class="viewcode-block" id="BobsledClient.Share.update"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.Share.update">[docs]</a>        <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Updates share according to parameters provided in params</span>
+<span class="sd">            </span>
+<span class="sd">            params = {</span>
+<span class="sd">                name,</span>
+<span class="sd">                description,</span>
+<span class="sd">                locationId, # this is for source location</span>
+<span class="sd">                cloud,</span>
+<span class="sd">                region,</span>
+<span class="sd">                consumers</span>
+<span class="sd">            }</span>
+<span class="sd">            </span>
+<span class="sd">            :param params: dictionary containing several optional fields</span>
+<span class="sd">            &quot;&quot;&quot;</span>            
+        
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">+</span> 
+                <span class="s2">&quot;/driver&quot;</span><span class="p">,</span>
+                <span class="n">data</span><span class="o">=</span><span class="n">params</span>
+            <span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">204</span><span class="p">:</span>
+                <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BobsledClient.Share.set_overview"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.Share.set_overview">[docs]</a>        <span class="k">def</span> <span class="nf">set_overview</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Sets overview text of the share</span>
+<span class="sd">            </span>
+<span class="sd">            :calls: `GET /shares/{share_id}/overview`</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span>
+            <span class="p">}</span>
+            
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares.$shareId/overview&quot;</span>
+            <span class="p">}</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">+</span>
+                <span class="s2">&quot;/overview&quot;</span><span class="p">,</span>
+                <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+                <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">204</span><span class="p">:</span>
+                <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BobsledClient.Share.get_source_locations"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.Share.get_source_locations">[docs]</a>        <span class="k">def</span> <span class="nf">get_source_locations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Retrieves and returns locations that can be used in set_source_location</span>
+<span class="sd">            </span>
+<span class="sd">            :calls: `GET /shares/{share_id}/source`</span>
+<span class="sd">            :return: list of locations </span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares.$shareId/source&quot;</span>
+            <span class="p">}</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">+</span>
+                <span class="s2">&quot;/source&quot;</span><span class="p">,</span>
+                <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+            <span class="n">json_locations</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;locations&#39;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">json_locations</span></div>
+
+<div class="viewcode-block" id="BobsledClient.Share.set_source_location"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.Share.set_source_location">[docs]</a>        <span class="k">def</span> <span class="nf">set_source_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location_id</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Set the source of the share to location_id</span>
+
+<span class="sd">            :calls: `POST /shares/{share_id}/source`</span>
+<span class="sd">            :param location_id: unique identifier of a source container</span>
+<span class="sd">            &quot;&quot;&quot;</span>            
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;locationIdJs&quot;</span><span class="p">:</span> <span class="n">location_id</span><span class="p">,</span>
+                    <span class="s2">&quot;locationId&quot;</span><span class="p">:</span> <span class="n">location_id</span><span class="p">,</span>
+                    <span class="p">}</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares.$shareId/source&quot;</span>
+            <span class="p">}</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">+</span>
+                <span class="s2">&quot;/source&quot;</span><span class="p">,</span>
+                <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+                <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">204</span><span class="p">:</span>
+                <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BobsledClient.Share.get_destination_locations"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.Share.get_destination_locations">[docs]</a>        <span class="k">def</span> <span class="nf">get_destination_locations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Get destination locations that can be used in set_destination_location</span>
+
+<span class="sd">            :calls: `GET /shares/{share_id}/destination/new`</span>
+<span class="sd">            :return: something, a list or dictionary of locations, undecided</span>
+<span class="sd">            &quot;&quot;&quot;</span>            
+            
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares.$shareId/destination/new&quot;</span>
+            <span class="p">}</span>
+            
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">+</span>
+                <span class="s2">&quot;/destination/new&quot;</span><span class="p">,</span>
+                <span class="n">params</span><span class="o">=</span><span class="n">params</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="BobsledClient.Share.set_destination_location"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.Share.set_destination_location">[docs]</a>        <span class="k">def</span> <span class="nf">set_destination_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cloud</span><span class="p">,</span> <span class="n">region</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Sets destination location of this share to given cloud and location_id (region?)</span>
+
+<span class="sd">            :calls: `POST /shares/{share_id}/destination/new`</span>
+<span class="sd">            :param cloud: cloud provider (e.g. AWS)</span>
+<span class="sd">            :param region: id of a region inside the cloud</span>
+<span class="sd">            &quot;&quot;&quot;</span>         
+               
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cloud&quot;</span><span class="p">:</span> <span class="n">cloud</span><span class="p">,</span> <span class="s2">&quot;region&quot;</span><span class="p">:</span> <span class="n">region</span><span class="p">}</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares.$shareId/destination/new&quot;</span>
+            <span class="p">}</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">+</span>
+                <span class="s2">&quot;/destination/new&quot;</span><span class="p">,</span>
+                <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+                <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">204</span><span class="p">:</span>
+                <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BobsledClient.Share.get_all_files"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.Share.get_all_files">[docs]</a>        <span class="k">def</span> <span class="nf">get_all_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Returns flattened contents of all files that were last modified after time in source location</span>
+
+<span class="sd">            :calls: `GET /shares/{share_id}/loadCloudData`</span>
+<span class="sd">            :param time: UNIX timestamp in seconds</span>
+<span class="sd">            :return: list of file paths</span>
+<span class="sd">            &quot;&quot;&quot;</span>            
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares.$shareId/loadCloudData&quot;</span>
+            <span class="p">}</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">+</span>
+                <span class="s2">&quot;/loadCloudData&quot;</span><span class="p">,</span>
+                <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+            <span class="n">folderContents</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;folderContents&#39;</span><span class="p">]</span>
+            
+            <span class="n">prefix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_share_information</span><span class="p">()[</span><span class="s2">&quot;share&quot;</span><span class="p">][</span><span class="s2">&quot;sourceLocation&quot;</span><span class="p">][</span><span class="s2">&quot;url&quot;</span><span class="p">]</span>
+            
+            <span class="k">return</span> <span class="n">flatten</span><span class="p">(</span><span class="n">folderContents</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="BobsledClient.Share.get_source_contents"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.Share.get_source_contents">[docs]</a>        <span class="k">def</span> <span class="nf">get_source_contents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Returns folder structure of source location and prefix</span>
+
+<span class="sd">            :calls: `GET /shares/{share_id}/loadCloudData`</span>
+<span class="sd">            :return: prefix and dictionary representing folder structure at source location</span>
+<span class="sd">            &quot;&quot;&quot;</span>            
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares.$shareId/loadCloudData&quot;</span>
+            <span class="p">}</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">+</span>
+                <span class="s2">&quot;/loadCloudData&quot;</span><span class="p">,</span>
+                <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+            <span class="n">folderContents</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;folderContents&#39;</span><span class="p">]</span>
+            
+            <span class="n">prefix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_share_information</span><span class="p">()[</span><span class="s2">&quot;share&quot;</span><span class="p">][</span><span class="s2">&quot;sourceLocation&quot;</span><span class="p">][</span><span class="s2">&quot;url&quot;</span><span class="p">]</span>
+            
+            <span class="k">return</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">folderContents</span></div>
+
+<div class="viewcode-block" id="BobsledClient.Share.get_deliveries"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.Share.get_deliveries">[docs]</a>        <span class="k">def</span> <span class="nf">get_deliveries</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Returns the list of deliveries of this share</span>
+
+<span class="sd">            :calls: `GET /shares/{share_id}`</span>
+<span class="sd">            :return: list of deliveries</span>
+<span class="sd">            &quot;&quot;&quot;</span>            
+            
+            <span class="n">share_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_share_information</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">share_info</span><span class="p">[</span><span class="s2">&quot;deliveries&quot;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="BobsledClient.Share.create_delivery"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.Share.create_delivery">[docs]</a>        <span class="k">def</span> <span class="nf">create_delivery</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selection</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">overwriteMode</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Creates and returns a Delivery object given selection of file paths</span>
+
+<span class="sd">            :calls: `POST /shares/{share_id}/delivery`</span>
+<span class="sd">            :param selection: file paths for files in the source container to be included in this delivery</span>
+<span class="sd">            &quot;&quot;&quot;</span>            
+
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;sharedFiles&quot;</span><span class="p">:</span> <span class="n">selection</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\&#39;</span><span class="s2">, </span><span class="se">\&#39;</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\&#39;</span><span class="s2">,</span><span class="se">\&#39;</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                    <span class="s2">&quot;</span><span class="se">\&#39;</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">),</span> <span class="c1"># we have to fit specific format</span>
+                <span class="s2">&quot;totalSize&quot;</span><span class="p">:</span> <span class="n">size</span><span class="p">,</span> <span class="c1"># placeholder</span>
+                <span class="s2">&quot;overwriteMode&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">overwriteMode</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="p">}</span>
+            
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">+</span>
+                <span class="s2">&quot;/delivery&quot;</span><span class="p">,</span>
+                <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+                <span class="n">allow_redirects</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">302</span><span class="p">:</span>
+                <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+            
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Delivery</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="BobsledClient.Share.get_delivery"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.Share.get_delivery">[docs]</a>        <span class="k">def</span> <span class="nf">get_delivery</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delivery_id</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Returns the Delivery object given the delivery_id</span>
+
+<span class="sd">            :param delivery_id: unique id of the delivery</span>
+<span class="sd">            :return: Delivery object</span>
+<span class="sd">            &quot;&quot;&quot;</span>            
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Delivery</span><span class="p">(</span><span class="n">delivery_id</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BobsledClient.Share.get_team"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.Share.get_team">[docs]</a>        <span class="k">def</span> <span class="nf">get_team</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Returns team members</span>
+
+<span class="sd">            :calls: `GET /shares/{share_id}/team`</span>
+<span class="sd">            :return: dictionary representing team members</span>
+<span class="sd">            &quot;&quot;&quot;</span>            
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares.$shareId/team&quot;</span>
+            <span class="p">}</span>
+            
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">+</span>
+                <span class="s2">&quot;/team&quot;</span><span class="p">,</span>
+                <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="BobsledClient.Share.add_consumer"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.Share.add_consumer">[docs]</a>        <span class="k">def</span> <span class="nf">add_consumer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">consumer_email</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Adds a consumer by given email</span>
+
+<span class="sd">            :calls: `POST /shares/{share_id}/team`</span>
+<span class="sd">            :param consumer_email: email address of the consumer to be added</span>
+<span class="sd">            &quot;&quot;&quot;</span>            
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="n">consumer_email</span><span class="p">,</span>
+                <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;consumer&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;actionType&quot;</span><span class="p">:</span> <span class="s2">&quot;addUserToShare&quot;</span>
+            <span class="p">}</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares.$shareId/team&quot;</span>
+            <span class="p">}</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">+</span>
+                <span class="s2">&quot;/team&quot;</span><span class="p">,</span>
+                <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+                <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
+                
+<div class="viewcode-block" id="BobsledClient.Share.add_consumers"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.Share.add_consumers">[docs]</a>        <span class="k">def</span> <span class="nf">add_consumers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">consumer_email_list</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Adds all emails provided to consumers</span>
+
+<span class="sd">            :calls: `POST /shares/{share_id}/team`</span>
+<span class="sd">            :param consumer_email_list: list of email addresses of the consumers to be added</span>
+<span class="sd">            &quot;&quot;&quot;</span>            
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;consumer&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;actionType&quot;</span><span class="p">:</span> <span class="s2">&quot;addUserToShare&quot;</span>
+            <span class="p">}</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares.$shareId/team&quot;</span>
+            <span class="p">}</span>
+            <span class="k">for</span> <span class="n">email</span> <span class="ow">in</span> <span class="n">consumer_email_list</span><span class="p">:</span>
+                <span class="n">data</span><span class="p">[</span><span class="s2">&quot;email&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">email</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">+</span>
+                    <span class="s2">&quot;/team&quot;</span><span class="p">,</span>
+                    <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+                    <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+                    <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
+
+        <span class="c1"># Currently this takes id (not email), which can be unintuitive to the user</span>
+<div class="viewcode-block" id="BobsledClient.Share.send_invitation"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.Share.send_invitation">[docs]</a>        <span class="k">def</span> <span class="nf">send_invitation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Sends the invitation to added member</span>
+
+<span class="sd">            :param id: id of the member (not email)</span>
+<span class="sd">            &quot;&quot;&quot;</span>            
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;memberToReceiveInvitationId&quot;</span><span class="p">:</span> <span class="nb">id</span><span class="p">,</span>
+                <span class="s2">&quot;actionType&quot;</span><span class="p">:</span> <span class="s2">&quot;sendEmail&quot;</span>
+            <span class="p">}</span>
+            
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares.$shareId/team&quot;</span>
+            <span class="p">}</span>
+            
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">+</span>
+                <span class="s2">&quot;/team&quot;</span><span class="p">,</span>
+                <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+                <span class="n">params</span><span class="o">=</span><span class="n">params</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BobsledClient.Share.add_access_identifiers"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.Share.add_access_identifiers">[docs]</a>        <span class="k">def</span> <span class="nf">add_access_identifiers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ARN_list</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Edit access identifiers of this share</span>
+
+<span class="sd">            :param ARN_list: list of access identifiers for this share</span>
+<span class="sd">            &quot;&quot;&quot;</span>            
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;accessIdentifiers&quot;</span><span class="p">:</span> <span class="n">ARN_list</span>
+            <span class="p">}</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares.$shareId/destination/edit&quot;</span>
+            <span class="p">}</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">+</span>
+                <span class="s2">&quot;/destination/edit&quot;</span><span class="p">,</span>
+                <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">204</span> <span class="ow">and</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
+                
+<div class="viewcode-block" id="BobsledClient.Share.remove_access_identifiers"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.Share.remove_access_identifiers">[docs]</a>        <span class="k">def</span> <span class="nf">remove_access_identifiers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ARN_list</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Remove access identifiers of this share</span>
+
+<span class="sd">            :param ARN_list: list of access identifiers for this share</span>
+<span class="sd">            &quot;&quot;&quot;</span>            
+            
+            <span class="c1"># we want to change ARNs into their ids</span>
+            <span class="n">ARN_id_list</span> <span class="o">=</span> <span class="p">[]</span>
+            
+            
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;accessIdentifiers&quot;</span><span class="p">:</span> <span class="n">ARN_list</span>
+            <span class="p">}</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares.$shareId/destination/edit&quot;</span>
+            <span class="p">}</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">+</span>
+                <span class="s2">&quot;/destination/edit&quot;</span><span class="p">,</span>
+                <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">204</span> <span class="ow">and</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BobsledClient.Share.Delivery"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.Share.Delivery">[docs]</a>        <span class="k">class</span> <span class="nc">Delivery</span><span class="p">:</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This class represents a delivery, and should only be acquired by the user through calling get_delivery or create_delivery on a Share</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delivery_id</span><span class="p">,</span> <span class="n">share</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">delivery_id</span> <span class="o">=</span> <span class="n">delivery_id</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">share</span> <span class="o">=</span> <span class="n">share</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">=</span> <span class="n">share</span><span class="o">.</span><span class="n">share_id</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">share</span><span class="o">.</span><span class="n">s</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">=</span> <span class="n">share</span><span class="o">.</span><span class="n">base_url</span>
+
+            <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
+                        
+            <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">return</span> <span class="s2">&quot;Delivery(&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">delivery_id</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
+
+<div class="viewcode-block" id="BobsledClient.Share.Delivery.deliver_delivery"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.Share.Delivery.deliver_delivery">[docs]</a>            <span class="k">def</span> <span class="nf">deliver_delivery</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="sd">&quot;&quot;&quot;Delivers this Delivery</span>
+<span class="sd">                </span>
+<span class="sd">                :calls: `POST /shares/{share_id}`</span>
+<span class="sd">                &quot;&quot;&quot;</span>                
+                <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;deliverDeliveryId&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">delivery_id</span><span class="p">,</span>
+                    <span class="s2">&quot;actionType&quot;</span><span class="p">:</span> <span class="s2">&quot;deliverDelivery&quot;</span>
+                <span class="p">}</span>
+                <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares.$shareId&quot;</span>
+                <span class="p">}</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span><span class="p">,</span>
+                    <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+                    <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">200</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">&lt;</span> <span class="mi">300</span><span class="p">):</span>
+                    <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
+            
+<div class="viewcode-block" id="BobsledClient.Share.Delivery.status"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.Share.Delivery.status">[docs]</a>            <span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="sd">&quot;&quot;&quot;Returns the current status of the delivery</span>
+
+<span class="sd">                :return: a string representing the current state of the delivery: &quot;published&quot;, &quot;delivering&quot;, &quot;delivered&quot;, &quot;invalid&quot;</span>
+<span class="sd">                &quot;&quot;&quot;</span>                
+                <span class="n">share_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">share</span><span class="o">.</span><span class="n">get_share_information</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">delivery</span> <span class="ow">in</span> <span class="n">share_info</span><span class="p">[</span><span class="s2">&quot;deliveries&quot;</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="n">delivery</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">delivery_id</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="n">delivery</span><span class="p">[</span><span class="s2">&quot;state&quot;</span><span class="p">]</span>
+                <span class="k">return</span> <span class="s2">&quot;invalid&quot;</span></div>
+                
+<div class="viewcode-block" id="BobsledClient.Share.Delivery.access"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.Share.Delivery.access">[docs]</a>            <span class="k">def</span> <span class="nf">access</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="sd">&quot;&quot;&quot;Returns the URL to access this delivery</span>
+
+<span class="sd">                :calls: `GET /shares/{share_id}/deliveries/{delivery_id}/access`</span>
+<span class="sd">                :return: URL where deliveries can be accessed</span>
+<span class="sd">                &quot;&quot;&quot;</span>                
+                
+                <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;_data&quot;</span><span class="p">:</span> <span class="s2">&quot;routes/__auth/shares.$shareId/deliveries/$deliveryId/access&quot;</span>
+                <span class="p">}</span>
+                
+                <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/shares/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">share_id</span> <span class="o">+</span> <span class="s2">&quot;/deliveries/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">delivery_id</span> <span class="o">+</span> <span class="s2">&quot;/access&quot;</span><span class="p">,</span>
+                    <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+                
+                <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+                    <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+                
+                <span class="n">url</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;delivery&quot;</span><span class="p">][</span><span class="s2">&quot;url&quot;</span><span class="p">]</span>
+                <span class="k">return</span> <span class="n">url</span></div></div></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Danny Yu.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
