@@ -9,9 +9,8 @@
 pip install bobsled-python-sdk
 ```
 
-## Usage example
-
-```sh
+## Getting Started
+```python
 from bobsled_sdk import BobsledClient
 
 credentials = { "email": "ex@mple.com", "password": "example"}
