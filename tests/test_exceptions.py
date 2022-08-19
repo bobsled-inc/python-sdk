@@ -1,5 +1,5 @@
 from bobsled_sdk import BobsledClient
-from bobsled_sdk import BobsledException, BadCredentialsError, InternalServerError, UnknownObjectError
+from bobsled_sdk import BobsledException, BadCredentialsError, InternalServerError, UnknownObjectError, UnprocessableEntityError
 import pytest
 
 base_url = "https://staging-rhizo-co-remix-deploy-remix-app-64ohelifva-ey.a.run.app/"
@@ -35,6 +35,6 @@ class TestClass:
         
         share = b.create_share()
         
-        with pytest.raises(InternalServerError): # raises 422
+        with pytest.raises(UnprocessableEntityError): # raises 422
             share.set_destination_location("AWS", "eu-west-1")
             share.add_access_identifiers(["baaaaad-arn", "this-one-too"])

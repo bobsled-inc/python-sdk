@@ -9,5 +9,6 @@ from .BobsledException import (
     BobsledException,
     BadCredentialsError,
     InternalServerError,
-    UnknownObjectError
+    UnknownObjectError,
+    UnprocessableEntityError
 )

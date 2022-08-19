@@ -345,7 +345,7 @@ class BobsledClient:
 
             data = {
                 "sharedFiles": selection.__str__().replace("\', \'", "\',\'").replace(
-                    "\'", "\""),# .replace(" ", "+"),  # we have to fit specific format
+                    "\'", "\""), # we have to fit specific format
                 "totalSize": size, # placeholder
                 "overwriteMode": str(overwriteMode).lower()
             }
@@ -514,7 +514,6 @@ class BobsledClient:
             def __repr__(self):
                 return "Delivery(" + self.delivery_id + ")"
 
-            # maybe rename this? 
             def deliver_delivery(self):
                 """Delivers this Delivery
                 
@@ -565,7 +564,3 @@ class BobsledClient:
                 
                 url = r.json()["delivery"]["url"]
                 return url
-
-            def edit_delivery(self):
-                # Unimplemented
-                return

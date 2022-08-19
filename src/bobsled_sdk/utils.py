@@ -7,9 +7,11 @@ def handle_errors(response):
     print(status, data)
     
     if response.status_code == 401 or response.status_code == 403:
-        raise BobsledException.BadCredentialsError(status = response.status_code, data = data) # errorType might change?
+        raise BobsledException.BadCredentialsError(status = response.status_code, data = data)
     elif response.status_code == 404:
         raise BobsledException.UnknownObjectError(status = response.status_code, data = data)
+    elif response.status_code == 422:
+        raise BobsledException.UnprocessableEntityError(status = response.status_code, data = data)
     elif response.status_code == 500:
         raise BobsledException.InternalServerError(status = response.status_code, data = data)
     else:

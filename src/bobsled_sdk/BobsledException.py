@@ -36,3 +36,8 @@ class UnknownObjectError(BobsledException):
     """
     Exception raised when requested object is not found (when Bobsled replies with a 404 HTML status)
     """
+    
+class UnprocessableEntityError(BobsledException):
+    """
+    Exception raised when the server receives invalid input (when Bobsled repleis with a 422 HTML Status)
+    """

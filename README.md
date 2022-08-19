@@ -1,7 +1,7 @@
 # Bobsled Python SDK
 > A Python library to interact with Bobsled
 
-![](header.png)
+![](bobsled-python-header.png)
 
 ## Installation
 
@@ -19,10 +19,6 @@ credentials = { "email": "ex@mple.com", "password": "example"}
 b = BobsledClient(credentials)
 ```
 
-A few motivating and useful examples of how your product can be used. Spice this up with code blocks and potentially more screenshots.
-
-_For more examples and usage, please refer to the [Wiki][wiki]._
-
 ## Development setup
 
 ```sh
@@ -32,8 +28,8 @@ pytest tests
 
 ## Release History
 
-* 0.0.1
-    * Work in progress
+* 1.0.0
+    * Initial release
 
 ## Meta
 
