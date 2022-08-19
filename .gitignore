@@ -3,7 +3,7 @@
 dist
 *.egg-info
 __pycache__/
-docs/_build/
+_docs/_build/
 simple.py
 .ipynb_checkpoints
 *.ipynb
