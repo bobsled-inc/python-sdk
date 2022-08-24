@@ -288,7 +288,7 @@ class BobsledClient:
 
             :calls: `GET /shares/{share_id}/loadCloudData`
             :param time: folder path (with format `/top_level_folder/another_folder/`) and UNIX timestamp in seconds
-            :return: list of file paths
+            :return: list of file paths, total size of files
             """            
             params = {
                 "_data": "routes/__auth/shares.$shareId/loadCloudData"
@@ -366,11 +366,13 @@ class BobsledClient:
             share_info = self.get_share_information()
             return share_info["deliveries"]
 
-        def create_delivery(self, selection, size = 1000, overwriteMode = True):
+        def create_delivery(self, selection, size = 1000, overwriteMode = False):
             """Creates and returns a Delivery object given selection of file paths
 
             :calls: `POST /shares/{share_id}/delivery`
             :param selection: file paths for files in the source container to be included in this delivery
+            :param size: total size of files in this delivery
+            :param overwriteMode: boolean indicating whether overwriteMode is on (True) or off (False)
             """            
 
             data = {
@@ -509,23 +511,23 @@ class BobsledClient:
 
             :param ARN_list: list of access identifiers for this share
             """            
-            
+            return
             # we want to change ARNs into their ids
-            ARN_id_list = []
+            # ARN_id_list = []
             
             
-            data = {
-                "accessIdentifiers": ARN_list
-            }
-            params = {
-                "_data": "routes/__auth/shares.$shareId/destination/edit"
-            }
-            r = self.s.post(
-                self.base_url + "/shares/" + self.share_id +
-                "/destination/edit",
-                data=data)
-            if r.status_code != 204 and r.status_code != 200:
-                handle_errors(r)
+            # data = {
+            #     "accessIdentifiers": ARN_list
+            # }
+            # params = {
+            #     "_data": "routes/__auth/shares.$shareId/destination/edit"
+            # }
+            # r = self.s.post(
+            #     self.base_url + "/shares/" + self.share_id +
+            #     "/destination/edit",
+            #     data=data)
+            # if r.status_code != 204 and r.status_code != 200:
+            #     handle_errors(r)
 
         class Delivery:
             """
