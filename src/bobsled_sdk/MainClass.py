@@ -287,7 +287,7 @@ class BobsledClient:
             """Returns flattened contents of all files that were last modified after time in source location
 
             :calls: `GET /shares/{share_id}/loadCloudData`
-            :param time: UNIX timestamp in seconds
+            :param time: folder path (with format `/top_level_folder/another_folder/`) and UNIX timestamp in seconds
             :return: list of file paths
             """            
             params = {
@@ -300,12 +300,13 @@ class BobsledClient:
             if r.status_code != 200:
                 handle_errors(r)
             folderContents = r.json()['folderContents']
-            
+
             prefix = self.get_share_information()["share"]["sourceLocation"]["url"]
             
             if path[-1] != "/":
                 raise BobsledException.BobsledException(status = -1, data = "Invalid input (must end in a folder)")
             
+            # Navigating into the right folder to run flatten on
             l = 0
             r = 0
             length = len(path)
