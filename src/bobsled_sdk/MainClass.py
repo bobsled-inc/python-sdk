@@ -283,7 +283,7 @@ class BobsledClient:
             if r.status_code != 204:
                 handle_errors(r)
 
-        def get_all_files(self, time=0):
+        def get_all_files(self, path="/", time=0):
             """Returns flattened contents of all files that were last modified after time in source location
 
             :calls: `GET /shares/{share_id}/loadCloudData`
@@ -302,6 +302,35 @@ class BobsledClient:
             folderContents = r.json()['folderContents']
             
             prefix = self.get_share_information()["share"]["sourceLocation"]["url"]
+            
+            if path[-1] != "/":
+                raise BobsledException.BobsledException(status = -1, data = "Invalid input (must end in a folder)")
+            
+            l = 0
+            r = 0
+            length = len(path)
+            folder_stack = []
+            while l < length and r < length:
+                if path[r] == "/":
+                    folder_stack.append(path[l: r+1])
+                    l = r + 1
+                    r = r + 1
+                r += 1
+                
+            folder_stack.reverse()
+            if folder_stack[-1] == "/":
+                folder_stack[-1] = "root"
+            
+            while folder_stack:
+                found = False
+                for obj in folderContents:
+                    if obj['name'] == folder_stack[-1]:
+                        folderContents = obj['content']
+                        folder_stack.pop()
+                        found = True
+                        break
+                if not found:
+                    raise BobsledException.BobsledException(status = -1, data = "Path doesn't exist")
             
             return flatten(folderContents, prefix, time)
         
