@@ -106,10 +106,10 @@ class BobsledClient:
             :calls: `GET /shares/{share_id}`
             :return: Dictionary containing full information on the share
             """            
-            params = {"_data": "routes/__auth/shares.$shareId"}
+            params = {"_data": "routes/__auth/shares.$shareId/$role"}
             
             r = self.s.get(
-                self.base_url + "/shares/" + self.share_id,
+                self.base_url + "/shares/" + self.share_id + "/provider",
                 params=params
             )
             
@@ -125,7 +125,7 @@ class BobsledClient:
             """            
             
             params = {
-                "_data": "routes/__auth/shares.$shareId"
+                "_data": "routes/__auth/shares.$shareId/$role"
             }
             
             data = {
@@ -133,7 +133,7 @@ class BobsledClient:
             }
             
             r = self.s.post(
-                self.base_url + "/shares/" + self.share_id,
+                self.base_url + "/shares/" + self.share_id + "/provider",
                 params=params,
                 data=data
             )
@@ -194,11 +194,11 @@ class BobsledClient:
             }
             
             params = {
-                "_data": "routes/__auth/shares.$shareId/overview"
+                "_data": "routes/__auth/shares.$shareId/$role/overview"
             }
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
-                "/overview",
+                "/provider/overview",
                 data=data,
                 params=params)
             if r.status_code != 204:
@@ -212,11 +212,11 @@ class BobsledClient:
             """
             
             params = {
-                "_data": "routes/__auth/shares.$shareId/source"
+                "_data": "routes/__auth/shares.$shareId/$role/source"
             }
             r = self.s.get(
                 self.base_url + "/shares/" + self.share_id +
-                "/source",
+                "/provider/source",
                 params=params)
             if r.status_code != 200:
                 handle_errors(r)
@@ -233,11 +233,11 @@ class BobsledClient:
                     "locationId": location_id,
                     }
             params = {
-                "_data": "routes/__auth/shares.$shareId/source"
+                "_data": "routes/__auth/shares.$shareId/$role/source"
             }
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
-                "/source",
+                "/provider/source",
                 data=data,
                 params=params)
             if r.status_code != 204:
@@ -251,12 +251,12 @@ class BobsledClient:
             """            
             
             params = {
-                "_data": "routes/__auth/shares.$shareId/destination/new"
+                "_data": "routes/__auth/shares.$shareId/$role/destination/new"
             }
             
             r = self.s.get(
                 self.base_url + "/shares/" + self.share_id +
-                "/destination/new",
+                "/provider/destination/new",
                 params=params
             )
             if r.status_code != 200:
@@ -273,11 +273,11 @@ class BobsledClient:
                
             data = {"cloud": cloud, "region": region}
             params = {
-                "_data": "routes/__auth/shares.$shareId/destination/new"
+                "_data": "routes/__auth/shares.$shareId/$role/destination/new"
             }
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
-                "/destination/new",
+                "/provider/destination/new",
                 data=data,
                 params=params)
             if r.status_code != 204:
@@ -384,7 +384,7 @@ class BobsledClient:
             
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
-                "/delivery",
+                "/provider/delivery",
                 data=data,
                 allow_redirects=False)
             
@@ -408,12 +408,12 @@ class BobsledClient:
             :return: dictionary representing team members
             """            
             params = {
-                "_data": "routes/__auth/shares.$shareId/team"
+                "_data": "routes/__auth/shares.$shareId/$role/team"
             }
             
             r = self.s.get(
                 self.base_url + "/shares/" + self.share_id +
-                "/team",
+                "/provider/team",
                 params=params)
             if r.status_code != 200:
                 handle_errors(r)
@@ -431,11 +431,11 @@ class BobsledClient:
                 "actionType": "addUserToShare"
             }
             params = {
-                "_data": "routes/__auth/shares.$shareId/team"
+                "_data": "routes/__auth/shares.$shareId/$role/team"
             }
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
-                "/team",
+                "/provider/team",
                 data=data,
                 params=params)
             if r.status_code != 200:
@@ -452,13 +452,13 @@ class BobsledClient:
                 "actionType": "addUserToShare"
             }
             params = {
-                "_data": "routes/__auth/shares.$shareId/team"
+                "_data": "routes/__auth/shares.$shareId/$role/team"
             }
             for email in consumer_email_list:
                 data["email"] = email
                 r = self.s.post(
                     self.base_url + "/shares/" + self.share_id +
-                    "/team",
+                    "/provider/team",
                     data=data,
                     params=params)
                 if r.status_code != 200:
@@ -476,12 +476,12 @@ class BobsledClient:
             }
             
             params = {
-                "_data": "routes/__auth/shares.$shareId/team"
+                "_data": "routes/__auth/shares.$shareId/$role/team"
             }
             
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
-                "/team",
+                "/provider/team",
                 data=data,
                 params=params
             )
@@ -497,11 +497,11 @@ class BobsledClient:
                 "accessIdentifiers": ARN_list
             }
             params = {
-                "_data": "routes/__auth/shares.$shareId/destination/edit"
+                "_data": "routes/__auth/shares.$shareId/$role/destination/edit"
             }
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
-                "/destination/edit",
+                "/provider/destination/edit",
                 data=data)
             if r.status_code != 204 and r.status_code != 200:
                 handle_errors(r)
@@ -520,11 +520,11 @@ class BobsledClient:
             #     "accessIdentifiers": ARN_list
             # }
             # params = {
-            #     "_data": "routes/__auth/shares.$shareId/destination/edit"
+            #     "_data": "routes/__auth/shares.$shareId/$role/destination/edit"
             # }
             # r = self.s.post(
             #     self.base_url + "/shares/" + self.share_id +
-            #     "/destination/edit",
+            #     "/provider/destination/edit",
             #     data=data)
             # if r.status_code != 204 and r.status_code != 200:
             #     handle_errors(r)
@@ -556,10 +556,10 @@ class BobsledClient:
                     "actionType": "deliverDelivery"
                 }
                 params = {
-                    "_data": "routes/__auth/shares.$shareId"
+                    "_data": "routes/__auth/shares.$shareId/$role"
                 }
                 r = self.s.post(
-                    self.base_url + "/shares/" + self.share_id,
+                    self.base_url + "/shares/" + self.share_id + "/provider",
                     data=data,
                     params=params)
                 if not (200 <= r.status_code < 300):
@@ -584,11 +584,11 @@ class BobsledClient:
                 """                
                 
                 params = {
-                    "_data": "routes/__auth/shares.$shareId/deliveries/$deliveryId/access"
+                    "_data": "routes/__auth/shares.$shareId/$role/deliveries/$deliveryId/access"
                 }
                 
                 r = self.s.get(
-                    self.base_url + "/shares/" + self.share_id + "/deliveries/" + self.delivery_id + "/access",
+                    self.base_url + "/shares/" + self.share_id + "/provider/deliveries/" + self.delivery_id + "/access",
                     params=params)
                 
                 if r.status_code != 200:
