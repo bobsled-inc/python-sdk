@@ -74,7 +74,7 @@ class BobsledClient:
         if r.status_code != 204:
             handle_errors(r)
         header_str = r.headers["x-remix-redirect"]
-        share_id = header_str[8:]
+        share_id = header_str[8:].split("/")[0]
         return self.Share(share_id, self.s, self.base_url)
 
 
@@ -87,10 +87,10 @@ class BobsledClient:
             self.s = session
             self.base_url = base_url
             
-            params = {"_data": "routes/__auth/shares.$shareId"}
+            params = {"_data": "routes/__auth/shares.$shareId/$role"}
             
             r = self.s.get(
-                self.base_url + "/shares/" + self.share_id,
+                self.base_url + "/shares/" + self.share_id + "/provider",
                 params=params
             )
             
