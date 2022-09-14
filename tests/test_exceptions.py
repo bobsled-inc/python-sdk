@@ -1,11 +1,12 @@
 from bobsled_sdk import BobsledClient
 from bobsled_sdk import BobsledException, BadCredentialsError, InternalServerError, UnknownObjectError, UnprocessableEntityError
 import pytest
+from dotenv import dotenv_values
 
-base_url = "https://staging-rhizo-co-remix-deploy-remix-app-64ohelifva-ey.a.run.app/"
-
-credentials = { "email": "danny@bobsled.co",
-        "password": "bobsledding_it"
+config = dotenv_values(".env")
+base_url = config["STAGING_URL"]
+credentials = { "email": config["STAGING_EMAIL"],
+        "password": config["STAGING_PASSWORD"]
 }
 
 class TestClass:

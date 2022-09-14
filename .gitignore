@@ -7,3 +7,4 @@ _docs/_build/
 simple.py
 .ipynb_checkpoints
 *.ipynb
+*.env
