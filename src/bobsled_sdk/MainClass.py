@@ -29,8 +29,6 @@ class BobsledClient:
         if r.status_code != 204:
             handle_errors(r)
 
-        print("signed in")
-
         params = {
             "_data": "routes/__auth/shares"
         }
@@ -44,6 +42,7 @@ class BobsledClient:
             handle_errors(r)
 
         # Does this actually work?
+        # What if you are normally a consumer, but is a provider on the share?
         role = r.json()["userProviderMembership"]["role"]
         if role == "member":
             self.role = "/provider"
@@ -450,8 +449,7 @@ class BobsledClient:
             """            
             data = {
                 "email": consumer_email,
-                "role": "consumer",
-                "actionType": "addUserToShare"
+                "actionType": "addConsumerToShare"
             }
             params = {
                 "_data": "routes/__auth/shares.$shareId/$role/team"
@@ -471,8 +469,7 @@ class BobsledClient:
             :param consumer_email_list: list of email addresses of the consumers to be added
             """            
             data = {
-                "role": "consumer",
-                "actionType": "addUserToShare"
+                "actionType": "addConsumerToShare"
             }
             params = {
                 "_data": "routes/__auth/shares.$shareId/$role/team"
