@@ -522,8 +522,9 @@ class BobsledClient:
             }
             r = self.s.post(
                 self.base_url + "/shares/" + self.share_id +
-                self.role + "destination/edit",
-                data=data)
+                self.role + "/destination/edit",
+                data=data,
+                params=params)
             if r.status_code != 204 and r.status_code != 200:
                 handle_errors(r)
                 

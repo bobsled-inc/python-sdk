@@ -6,5 +6,6 @@ __pycache__/
 _docs/_build/
 simple.py
 .ipynb_checkpoints
+docs/
 *.ipynb
 *.env
