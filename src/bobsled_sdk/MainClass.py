@@ -103,7 +103,7 @@ class BobsledClient:
         """
         This class represents a share, and should only be acquired by the user through calling get_share or create_share on a BobsledClient
         """
-        def __init__(self, share_id, session, base_url, role):
+        def __init__(self, share_id, session, base_url, role):   
             self.share_id = share_id
             self.s = session
             self.base_url = base_url
@@ -125,7 +125,7 @@ class BobsledClient:
         def get_share_information(self):
             """Retrieves and returns full information on the share
             
-            :calls: `GET /shares/{share_id}`
+            :calls: `GET /shares/{share_id}/{role}`
             :return: Dictionary containing full information on the share
             """            
             params = {"_data": "routes/__auth/shares.$shareId/$role"}
@@ -143,7 +143,7 @@ class BobsledClient:
         def archive(self):
             """Archives current share
             
-            :calls; `POST /shares/{share_id}`
+            :calls; `POST /shares/{share_id}/{role}`
             """            
             
             params = {
@@ -207,7 +207,7 @@ class BobsledClient:
         def set_overview(self, name, description):
             """Sets overview text of the share
             
-            :calls: `GET /shares/{share_id}/overview`
+            :calls: `GET /shares/{share_id}/{role}/overview`
             """
         
             data = {
@@ -229,7 +229,7 @@ class BobsledClient:
         def get_source_locations(self):
             """Retrieves and returns locations that can be used in set_source_location
             
-            :calls: `GET /shares/{share_id}/source`
+            :calls: `GET /shares/{share_id}/{role}/source`
             :return: list of locations 
             """
             
@@ -248,7 +248,7 @@ class BobsledClient:
         def set_source_location(self, location_id):
             """Set the source of the share to location_id
 
-            :calls: `POST /shares/{share_id}/source`
+            :calls: `POST /shares/{share_id}/{role}/source`
             :param location_id: unique identifier of a source container
             """            
             data = {"locationIdJs": location_id,
@@ -268,7 +268,7 @@ class BobsledClient:
         def get_destination_locations(self):
             """Get destination locations that can be used in set_destination_location
 
-            :calls: `GET /shares/{share_id}/destination/new`
+            :calls: `GET /shares/{share_id}/{role}/destination/new`
             :return: something, a list or dictionary of locations, undecided
             """            
             
@@ -288,7 +288,7 @@ class BobsledClient:
         def set_destination_location(self, cloud, region):
             """Sets destination location of this share to given cloud and location_id (region?)
 
-            :calls: `POST /shares/{share_id}/destination/new`
+            :calls: `POST /shares/{share_id}/{role}/destination/new`
             :param cloud: cloud provider (e.g. AWS)
             :param region: id of a region inside the cloud
             """         
@@ -309,7 +309,8 @@ class BobsledClient:
             """Returns flattened contents of all files that were last modified after time in source location
 
             :calls: `GET /shares/{share_id}/loadCloudData`
-            :param time: folder path (with format `/top_level_folder/another_folder/`) and UNIX timestamp in seconds
+            :param path: folder path (with format `/top_level_folder/another_folder/`) indicating which folder to begin search from (default is root)
+            :param time: UNIX timestamp in seconds
             :return: list of file paths, total size of files
             """            
             params = {
@@ -391,7 +392,7 @@ class BobsledClient:
         def create_delivery(self, selection, size = 1000, overwriteMode = False):
             """Creates and returns a Delivery object given selection of file paths
 
-            :calls: `POST /shares/{share_id}/delivery`
+            :calls: `POST /shares/{share_id}/{role}/delivery`
             :param selection: file paths for files in the source container to be included in this delivery
             :param size: total size of files in this delivery
             :param overwriteMode: boolean indicating whether overwriteMode is on (True) or off (False)
@@ -426,7 +427,7 @@ class BobsledClient:
         def get_team(self):
             """Returns team members
 
-            :calls: `GET /shares/{share_id}/team`
+            :calls: `GET /shares/{share_id}/{role}/team`
             :return: dictionary representing team members
             """            
             params = {
@@ -444,7 +445,7 @@ class BobsledClient:
         def add_consumer(self, consumer_email):
             """Adds a consumer by given email
 
-            :calls: `POST /shares/{share_id}/team`
+            :calls: `POST /shares/{share_id}/{role}/team`
             :param consumer_email: email address of the consumer to be added
             """            
             data = {
@@ -465,7 +466,7 @@ class BobsledClient:
         def add_consumers(self, consumer_email_list):
             """Adds all emails provided to consumers
 
-            :calls: `POST /shares/{share_id}/team`
+            :calls: `POST /shares/{share_id}/{role}/team`
             :param consumer_email_list: list of email addresses of the consumers to be added
             """            
             data = {
@@ -570,7 +571,7 @@ class BobsledClient:
             def deliver_delivery(self):
                 """Delivers this Delivery
                 
-                :calls: `POST /shares/{share_id}`
+                :calls: `POST /shares/{share_id}/{role}`
                 """                
                 data = {
                     "deliverDeliveryId": self.delivery_id,
@@ -600,7 +601,7 @@ class BobsledClient:
             def access(self):
                 """Returns the URL to access this delivery
 
-                :calls: `GET /shares/{share_id}/deliveries/{delivery_id}/access`
+                :calls: `GET /shares/{share_id}/{role}/deliveries/{delivery_id}/access`
                 :return: URL where deliveries can be accessed
                 """                
                 

@@ -4,9 +4,9 @@ import pytest
 from dotenv import dotenv_values
 
 config = dotenv_values(".env")
-base_url = config["DATABITS_URL"]
-credentials = { "email": config["DATABITS_EMAIL"],
-        "password": config["DATABITS_PASSWORD"]
+base_url = config["STAGING_URL"]
+credentials = { "email": config["STAGING_EMAIL"],
+        "password": config["STAGING_PASSWORD"]
 }
 
 class TestClass:
