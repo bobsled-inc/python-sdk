@@ -132,7 +132,7 @@ From its methods, you will obtain instances of all Bobsled objects.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bobsled_sdk.MainClass.BobsledClient.Share">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Share</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">share_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_url</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bobsled_sdk/MainClass.html#BobsledClient.Share"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bobsled_sdk.MainClass.BobsledClient.Share" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Share</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">share_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">role</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bobsled_sdk/MainClass.html#BobsledClient.Share"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bobsled_sdk.MainClass.BobsledClient.Share" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>This class represents a share, and should only be acquired by the user through calling get_share or create_share on a BobsledClient</p>
 <dl class="py method">
@@ -146,7 +146,7 @@ From its methods, you will obtain instances of all Bobsled objects.</p>
 <dd><p>Retrieves and returns full information on the share</p>
 <dl class="field-list simple">
 <dt class="field-odd">Calls</dt>
-<dd class="field-odd"><p><cite>GET /shares/{share_id}</cite></p>
+<dd class="field-odd"><p><cite>GET /shares/{share_id}/{role}</cite></p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Dictionary containing full information on the share</p>
@@ -158,7 +158,7 @@ From its methods, you will obtain instances of all Bobsled objects.</p>
 <dt class="sig sig-object py" id="bobsled_sdk.MainClass.BobsledClient.Share.archive">
 <span class="sig-name descname"><span class="pre">archive</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bobsled_sdk/MainClass.html#BobsledClient.Share.archive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bobsled_sdk.MainClass.BobsledClient.Share.archive" title="Permalink to this definition"></a></dt>
 <dd><p>Archives current share</p>
-<p>:calls; <cite>POST /shares/{share_id}</cite></p>
+<p>:calls; <cite>POST /shares/{share_id}/{role}</cite></p>
 </dd></dl>
 
 <dl class="py method">
@@ -199,7 +199,7 @@ consumers</p>
 <dd><p>Sets overview text of the share</p>
 <dl class="field-list simple">
 <dt class="field-odd">Calls</dt>
-<dd class="field-odd"><p><cite>GET /shares/{share_id}/overview</cite></p>
+<dd class="field-odd"><p><cite>GET /shares/{share_id}/{role}/overview</cite></p>
 </dd>
 </dl>
 </dd></dl>
@@ -210,7 +210,7 @@ consumers</p>
 <dd><p>Retrieves and returns locations that can be used in set_source_location</p>
 <dl class="field-list simple">
 <dt class="field-odd">Calls</dt>
-<dd class="field-odd"><p><cite>GET /shares/{share_id}/source</cite></p>
+<dd class="field-odd"><p><cite>GET /shares/{share_id}/{role}/source</cite></p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>list of locations</p>
@@ -224,7 +224,7 @@ consumers</p>
 <dd><p>Set the source of the share to location_id</p>
 <dl class="field-list simple">
 <dt class="field-odd">Calls</dt>
-<dd class="field-odd"><p><cite>POST /shares/{share_id}/source</cite></p>
+<dd class="field-odd"><p><cite>POST /shares/{share_id}/{role}/source</cite></p>
 </dd>
 <dt class="field-even">Parameters</dt>
 <dd class="field-even"><p><strong>location_id</strong> – unique identifier of a source container</p>
@@ -238,7 +238,7 @@ consumers</p>
 <dd><p>Get destination locations that can be used in set_destination_location</p>
 <dl class="field-list simple">
 <dt class="field-odd">Calls</dt>
-<dd class="field-odd"><p><cite>GET /shares/{share_id}/destination/new</cite></p>
+<dd class="field-odd"><p><cite>GET /shares/{share_id}/{role}/destination/new</cite></p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>something, a list or dictionary of locations, undecided</p>
@@ -252,7 +252,7 @@ consumers</p>
 <dd><p>Sets destination location of this share to given cloud and location_id (region?)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Calls</dt>
-<dd class="field-odd"><p><cite>POST /shares/{share_id}/destination/new</cite></p>
+<dd class="field-odd"><p><cite>POST /shares/{share_id}/{role}/destination/new</cite></p>
 </dd>
 <dt class="field-even">Parameters</dt>
 <dd class="field-even"><ul class="simple">
@@ -265,17 +265,20 @@ consumers</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bobsled_sdk.MainClass.BobsledClient.Share.get_all_files">
-<span class="sig-name descname"><span class="pre">get_all_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bobsled_sdk/MainClass.html#BobsledClient.Share.get_all_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bobsled_sdk.MainClass.BobsledClient.Share.get_all_files" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_all_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bobsled_sdk/MainClass.html#BobsledClient.Share.get_all_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bobsled_sdk.MainClass.BobsledClient.Share.get_all_files" title="Permalink to this definition"></a></dt>
 <dd><p>Returns flattened contents of all files that were last modified after time in source location</p>
 <dl class="field-list simple">
 <dt class="field-odd">Calls</dt>
 <dd class="field-odd"><p><cite>GET /shares/{share_id}/loadCloudData</cite></p>
 </dd>
 <dt class="field-even">Parameters</dt>
-<dd class="field-even"><p><strong>time</strong> – UNIX timestamp in seconds</p>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>path</strong> – folder path (with format <cite>/top_level_folder/another_folder/</cite>) indicating which folder to begin search from (default is root)</p></li>
+<li><p><strong>time</strong> – UNIX timestamp in seconds</p></li>
+</ul>
 </dd>
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>list of file paths</p>
+<dd class="field-odd"><p>list of file paths, total size of files</p>
 </dd>
 </dl>
 </dd></dl>
@@ -310,14 +313,18 @@ consumers</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bobsled_sdk.MainClass.BobsledClient.Share.create_delivery">
-<span class="sig-name descname"><span class="pre">create_delivery</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwriteMode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bobsled_sdk/MainClass.html#BobsledClient.Share.create_delivery"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bobsled_sdk.MainClass.BobsledClient.Share.create_delivery" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">create_delivery</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwriteMode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bobsled_sdk/MainClass.html#BobsledClient.Share.create_delivery"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bobsled_sdk.MainClass.BobsledClient.Share.create_delivery" title="Permalink to this definition"></a></dt>
 <dd><p>Creates and returns a Delivery object given selection of file paths</p>
 <dl class="field-list simple">
 <dt class="field-odd">Calls</dt>
-<dd class="field-odd"><p><cite>POST /shares/{share_id}/delivery</cite></p>
+<dd class="field-odd"><p><cite>POST /shares/{share_id}/{role}/delivery</cite></p>
 </dd>
 <dt class="field-even">Parameters</dt>
-<dd class="field-even"><p><strong>selection</strong> – file paths for files in the source container to be included in this delivery</p>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>selection</strong> – file paths for files in the source container to be included in this delivery</p></li>
+<li><p><strong>size</strong> – total size of files in this delivery</p></li>
+<li><p><strong>overwriteMode</strong> – boolean indicating whether overwriteMode is on (True) or off (False)</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -342,7 +349,7 @@ consumers</p>
 <dd><p>Returns team members</p>
 <dl class="field-list simple">
 <dt class="field-odd">Calls</dt>
-<dd class="field-odd"><p><cite>GET /shares/{share_id}/team</cite></p>
+<dd class="field-odd"><p><cite>GET /shares/{share_id}/{role}/team</cite></p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>dictionary representing team members</p>
@@ -356,7 +363,7 @@ consumers</p>
 <dd><p>Adds a consumer by given email</p>
 <dl class="field-list simple">
 <dt class="field-odd">Calls</dt>
-<dd class="field-odd"><p><cite>POST /shares/{share_id}/team</cite></p>
+<dd class="field-odd"><p><cite>POST /shares/{share_id}/{role}/team</cite></p>
 </dd>
 <dt class="field-even">Parameters</dt>
 <dd class="field-even"><p><strong>consumer_email</strong> – email address of the consumer to be added</p>
@@ -370,7 +377,7 @@ consumers</p>
 <dd><p>Adds all emails provided to consumers</p>
 <dl class="field-list simple">
 <dt class="field-odd">Calls</dt>
-<dd class="field-odd"><p><cite>POST /shares/{share_id}/team</cite></p>
+<dd class="field-odd"><p><cite>POST /shares/{share_id}/{role}/team</cite></p>
 </dd>
 <dt class="field-even">Parameters</dt>
 <dd class="field-even"><p><strong>consumer_email_list</strong> – list of email addresses of the consumers to be added</p>
@@ -411,6 +418,26 @@ consumers</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="bobsled_sdk.MainClass.BobsledClient.Share.start_automation">
+<span class="sig-name descname"><span class="pre">start_automation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bobsled_sdk/MainClass.html#BobsledClient.Share.start_automation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bobsled_sdk.MainClass.BobsledClient.Share.start_automation" title="Permalink to this definition"></a></dt>
+<dd><p>Starts the automated delivery</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>selection</strong> (<em>list</em>) – list of folder paths to be automated</p></li>
+<li><p><strong>size</strong> (<em>int</em><em>, </em><em>optional</em>) – Estimated size. Defaults to 1000.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bobsled_sdk.MainClass.BobsledClient.Share.stop_automation">
+<span class="sig-name descname"><span class="pre">stop_automation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bobsled_sdk/MainClass.html#BobsledClient.Share.stop_automation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bobsled_sdk.MainClass.BobsledClient.Share.stop_automation" title="Permalink to this definition"></a></dt>
+<dd><p>Stops the automated delivery</p>
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="bobsled_sdk.MainClass.BobsledClient.Share.Delivery">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Delivery</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delivery_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">share</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bobsled_sdk/MainClass.html#BobsledClient.Share.Delivery"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bobsled_sdk.MainClass.BobsledClient.Share.Delivery" title="Permalink to this definition"></a></dt>
@@ -422,7 +449,7 @@ consumers</p>
 <dd><p>Delivers this Delivery</p>
 <dl class="field-list simple">
 <dt class="field-odd">Calls</dt>
-<dd class="field-odd"><p><cite>POST /shares/{share_id}</cite></p>
+<dd class="field-odd"><p><cite>POST /shares/{share_id}/{role}</cite></p>
 </dd>
 </dl>
 </dd></dl>
@@ -444,7 +471,7 @@ consumers</p>
 <dd><p>Returns the URL to access this delivery</p>
 <dl class="field-list simple">
 <dt class="field-odd">Calls</dt>
-<dd class="field-odd"><p><cite>GET /shares/{share_id}/deliveries/{delivery_id}/access</cite></p>
+<dd class="field-odd"><p><cite>GET /shares/{share_id}/{role}/deliveries/{delivery_id}/access</cite></p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>URL where deliveries can be accessed</p>

@@ -77,7 +77,7 @@ class BobsledClient:
         :param share_id: unique id of share
         :return: Share object
         """        
-        return self.Share(share_id, self.s, self.base_url)
+        return self.Share(share_id, self.s, self.base_url, self.role)
 
     def create_share(self):
         """Creates a new share. This only works if authenticated as a provider
@@ -550,6 +550,57 @@ class BobsledClient:
             #     data=data)
             # if r.status_code != 204 and r.status_code != 200:
             #     handle_errors(r)
+            
+        # Add automation routes
+        
+        def start_automation(self, selection, size = 1000):
+            """Starts the automated delivery
+
+            Args:
+                selection (list): list of folder paths to be automated
+                size (int, optional): Estimated size. Defaults to 1000.
+            """            
+            
+            data = {
+                "sharedFiles": selection.__str__().replace("\', \'", "\',\'").replace(
+                    "\'", "\""),
+                "totalSize": size,
+            }
+            
+            params = {
+                "_data": "routes/__auth/shares.$shareId/$role/automation"
+            }
+            
+            r = self.s.post(
+                self.base_url + "/shares/" + self.share_id +
+                self.role + "/automation",
+                data=data,
+                params=params)
+            
+            if r.status_code != 204:
+                handle_errors(r)
+        
+        def stop_automation(self):
+            """Stops the automated delivery
+            """            
+            
+            data = {
+                "actionType": "stopAutomation"
+            }
+            
+            params = {
+                "_data": "routes/__auth/shares.$shareId/$role"
+            }
+            
+            r = self.s.post(
+                self.base_url + "/shares/" + self.share_id +
+                self.role,
+                data=data,
+                params=params
+            )
+            
+            if r.status_code != 200 or r.status_code != 204:
+                handle_errors(r)
 
         class Delivery:
             """

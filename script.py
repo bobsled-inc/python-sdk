@@ -2,8 +2,8 @@ from bobsled_sdk import BobsledClient
 
 base_url = "https://databits.bobsled-cloud.com/"
 
-credentials = { "email": "andy@bobsled.co",
-        "password": "8ejq5xS1UlzbRuoN9yulxvk3edhmVAn"
+credentials = { "email": "your@email.com",
+        "password": "some_password"
 }
 # 016f3240-2851-11ed-afe0-9922d396a736
  # Instantiate Client
@@ -24,4 +24,4 @@ share.set_destination_location("AWS", "us-east-2")
 # Create Delivery
 folder_contents, size = ["s3://databits-source-us-east-2/stock_data/", "s3://databits-source-us-east-2/danny_sync_folder"], 123456
 delivery = share.create_delivery(folder_contents, size, overwriteMode=True);
-delivery.deliver_delivery();
+delivery.deliver_delivery()
