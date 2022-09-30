@@ -628,7 +628,7 @@
 <span class="sd">            &quot;&quot;&quot;</span>            
             
             <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;sharedFiles&quot;</span><span class="p">:</span> <span class="n">selection</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\&#39;</span><span class="s2">, </span><span class="se">\&#39;</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\&#39;</span><span class="s2">,</span><span class="se">\&#39;</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="s2">&quot;sharedFolders&quot;</span><span class="p">:</span> <span class="n">selection</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\&#39;</span><span class="s2">, </span><span class="se">\&#39;</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\&#39;</span><span class="s2">,</span><span class="se">\&#39;</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
                     <span class="s2">&quot;</span><span class="se">\&#39;</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">),</span>
                 <span class="s2">&quot;totalSize&quot;</span><span class="p">:</span> <span class="n">size</span><span class="p">,</span>
             <span class="p">}</span>
@@ -646,6 +646,7 @@
             <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">204</span><span class="p">:</span>
                 <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
         
+        <span class="c1"># Error when there is no automated delivery to be stopped</span>
 <div class="viewcode-block" id="BobsledClient.Share.stop_automation"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.Share.stop_automation">[docs]</a>        <span class="k">def</span> <span class="nf">stop_automation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;Stops the automated delivery</span>
 <span class="sd">            &quot;&quot;&quot;</span>            
@@ -665,7 +666,7 @@
                 <span class="n">params</span><span class="o">=</span><span class="n">params</span>
             <span class="p">)</span>
             
-            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span> <span class="ow">or</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">204</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
                 <span class="n">handle_errors</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BobsledClient.Share.Delivery"><a class="viewcode-back" href="../../bobsled_sdk.html#bobsled_sdk.MainClass.BobsledClient.Share.Delivery">[docs]</a>        <span class="k">class</span> <span class="nc">Delivery</span><span class="p">:</span>
