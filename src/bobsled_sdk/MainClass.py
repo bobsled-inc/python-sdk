@@ -562,7 +562,7 @@ class BobsledClient:
             """            
             
             data = {
-                "sharedFiles": selection.__str__().replace("\', \'", "\',\'").replace(
+                "sharedFolders": selection.__str__().replace("\', \'", "\',\'").replace(
                     "\'", "\""),
                 "totalSize": size,
             }
@@ -580,6 +580,7 @@ class BobsledClient:
             if r.status_code != 204:
                 handle_errors(r)
         
+        # Error when there is no automated delivery to be stopped
         def stop_automation(self):
             """Stops the automated delivery
             """            
