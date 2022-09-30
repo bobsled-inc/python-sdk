@@ -600,7 +600,7 @@ class BobsledClient:
                 params=params
             )
             
-            if r.status_code != 200 or r.status_code != 204:
+            if r.status_code != 200:
                 handle_errors(r)
 
         class Delivery:
