@@ -18,10 +18,14 @@ credentials = { "email": "ex@mple.com", "password": "example"}
 b = BobsledClient(credentials)
 ```
 
+## Documentation
+More information can be found on the [Bobsled-Python-SDK documentation site.](https://bobsled-python-sdk.readthedocs.io/en/latest/)
+
 ## Development setup
 
 ```sh
 pip install -r requirements.txt
+pip install -r requirements_dev.txt
 pytest tests
 ```
 
